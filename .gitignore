@@ -1,0 +1,4 @@
+bin
+/ts.conf
+.vscode
+src/__debug_bin.conf
