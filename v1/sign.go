@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -50,8 +51,13 @@ func (o *Sign) header(h http.Header, s string, needPartnerHeader bool, path stri
 	ts := o.timestamp()
 	preSignString := ts + method + "/" + ApiVersion + "/" + path
 	if s != "" {
-		preSignString = preSignString + "?" + s
+		var delimeter string
+		if method == "GET" {
+			delimeter = "?"
+		}
+		preSignString = preSignString + delimeter + s
 	}
+	fmt.Println(preSignString)
 
 	kcApiSign := signHmac(preSignString, o.secret)
 
