@@ -1,6 +1,9 @@
 package v1
 
 import (
+	"time"
+
+	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ujson"
 )
 
@@ -69,7 +72,18 @@ type OpenContract struct {
 }
 
 func getOpenContracts[T any](o GetOpenContracts, c *Client) Response[T] {
-	return GetPub[T](c.contracts(), "active", o)
+	return GetPub[T](c.contracts(), "active", o, func(h uhttp.Responce) (r Response[T], er error) {
+		if h.BodyExists() {
+			raw := new(response[T])
+			h.Json(raw)
+			r.Time = getCurrentTime()
+			r.Error = raw.Error()
+			if r.Ok() {
+				r.Data, r.Error = raw.Data, nil
+			}
+		}
+		return
+	})
 }
 
 func (o GetOpenContracts) Do(c *Client) Response[OpenContract] {
@@ -112,5 +126,20 @@ func (o GetTicker) Do(c *Client) Response[Ticker] {
 }
 
 func getTickers[T any](o GetTicker, c *Client) Response[T] {
-	return GetPub[T](c, "ticker", o)
+	return GetPub[T](c, "ticker", o, func(h uhttp.Responce) (r Response[T], er error) {
+		if h.BodyExists() {
+			raw := new(item[T])
+			h.Json(raw)
+			r.Time = getCurrentTime()
+			r.Error = raw.Error()
+			if r.Ok() {
+				r.Data = []T{raw.Data}
+			}
+		}
+		return
+	})
+}
+
+func getCurrentTime() uint64 {
+	return uint64(time.Now().UnixNano())
 }

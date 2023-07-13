@@ -11,7 +11,7 @@ func NewClient() *Client {
 	o := new(Client)
 	o.c = uhttp.NewClient()
 	o.WithBaseUrl(MainBaseUrl)
-	o.WithPath("api/v1")
+	o.WithPath(ApiVersion)
 	return o
 }
 
@@ -34,6 +34,11 @@ func (o *Client) WithPath(path string) *Client {
 
 func (o *Client) WithAppendPath(path string) *Client {
 	o.c.WithAppendPath(path)
+	return o
+}
+
+func (o *Client) WithAuth(key, secret, password string) *Client {
+	o.s = NewSign(key, secret, password)
 	return o
 }
 

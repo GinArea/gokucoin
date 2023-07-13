@@ -12,6 +12,12 @@ type response[T any] struct {
 	Data []T
 }
 
+type item[T any] struct {
+	Code string
+	Msg  string
+	Data T
+}
+
 func (o *Response[T]) Ok() bool {
 	return o.Error == nil
 }
@@ -23,9 +29,17 @@ func (o *Response[T]) SetErrorIfNil(err error) {
 }
 
 func (o *response[T]) Error() error {
+	return getError(o.Code, "")
+}
+
+func (o *item[T]) Error() error {
+	return getError(o.Code, o.Msg)
+}
+
+func getError(code string, msg string) error {
 	e := Error{
-		Code: o.Code,
-		Text: "", //TODO
+		Code: code,
+		Text: msg,
 	}
 	return e.Std()
 }
