@@ -14,7 +14,6 @@ func request[T any](c *Client, method string, path string, request any, sign boo
 		perf = c.c.Get(path).Params(request)
 	case http.MethodPost:
 		perf = c.c.Post(path).Json(request)
-		fmt.Println(string(perf.Request.Body))
 	default:
 		r.Error = fmt.Errorf("forbidden method: %s", method)
 		return

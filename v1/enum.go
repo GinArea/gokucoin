@@ -36,6 +36,13 @@ const (
 	Down StopType = "down"
 )
 
+type Status string
+
+const (
+	OpenStatus Status = "open"
+	DoneStatus Status = "done"
+)
+
 type StopPriceType string
 
 const (
