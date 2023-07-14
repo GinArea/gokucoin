@@ -7,9 +7,20 @@ type Response[T any] struct {
 	Error error
 }
 
+type nestedResponse[T any] struct {
+	Code string
+	Data struct {
+		CurrentPage int64
+		PageSize    int64
+		Items       []T
+	}
+	Msg string
+}
+
 type response[T any] struct {
 	Code string
 	Data []T
+	Msg  string
 }
 
 type item[T any] struct {
@@ -29,10 +40,14 @@ func (o *Response[T]) SetErrorIfNil(err error) {
 }
 
 func (o *response[T]) Error() error {
-	return getError(o.Code, "")
+	return getError(o.Code, o.Msg)
 }
 
 func (o *item[T]) Error() error {
+	return getError(o.Code, o.Msg)
+}
+
+func (o *nestedResponse[T]) Error() error {
 	return getError(o.Code, o.Msg)
 }
 

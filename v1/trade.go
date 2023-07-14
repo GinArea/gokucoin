@@ -61,14 +61,14 @@ func placeOrder[T any](o PlaceOrder, c *Client) Response[T] {
 // https://docs.kucoin.com/futures/#get-fills
 
 type GetFills struct {
-	OrderId     string    `json:",omitempty"`
-	Symbol      string    `json:",omitempty"`
-	Side        Side      `json:",omitempty"`
-	Type        OrderType `json:",omitempty"`
-	StartAt     int64     `json:",omitempty"`
-	EndAt       int64     `json:",omitempty"`
-	CurrentPage int64     `json:",omitempty"`
-	PageSize    int64     `json:",omitempty"`
+	OrderId     string    `url:",omitempty"`
+	Symbol      string    `url:",omitempty"`
+	Side        Side      `url:",omitempty"`
+	Type        OrderType `url:",omitempty"`
+	StartAt     int64     `url:",omitempty"`
+	EndAt       int64     `url:",omitempty"`
+	CurrentPage int64     `url:",omitempty"`
+	PageSize    int64     `url:",omitempty"`
 }
 
 type Fills struct {
@@ -91,6 +91,30 @@ type Fills struct {
 	CreatedAt      int64
 	SettleCurrency string
 	TradeTime      int64
-	OpenFeePay     ujson.Float64
-	CloseFeePay    ujson.Float64
+	// в документации есть, но не передаются поля
+	// OpenFeePay     ujson.Float64
+	// CloseFeePay    ujson.Float64
+}
+
+func (o *Client) GetFills(v GetFills) Response[Fills] {
+	return v.Do(o)
+}
+
+func (o GetFills) Do(c *Client) Response[Fills] {
+	return getFills[Fills](o, c)
+}
+
+func getFills[T any](o GetFills, c *Client) Response[T] {
+	return Get[T](c, "fills", o, func(h uhttp.Responce) (r Response[T], er error) {
+		if h.BodyExists() {
+			raw := new(nestedResponse[T])
+			h.Json(raw)
+			r.Time = getCurrentTime()
+			r.Error = raw.Error()
+			if r.Ok() {
+				r.Data = raw.Data.Items
+			}
+		}
+		return
+	})
 }
