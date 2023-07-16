@@ -52,3 +52,7 @@ func Get[T any](c *Client, path string, req any, transform func(uhttp.Responce) 
 func Post[T any](c *Client, path string, req any, transform func(uhttp.Responce) (Response[T], error)) Response[T] {
 	return request[T](c, http.MethodPost, path, req, true, transform)
 }
+
+func PostPub[T any](c *Client, path string, req any, transform func(uhttp.Responce) (Response[T], error)) Response[T] {
+	return request[T](c, http.MethodPost, path, req, false, transform)
+}

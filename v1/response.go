@@ -58,3 +58,16 @@ func getError(code string, msg string) error {
 	}
 	return e.Std()
 }
+
+type WsTokenResponse struct {
+	Token           string
+	InstanceServers []InstanceServers
+}
+
+type InstanceServers struct {
+	Endpoint     string
+	Encrypt      bool
+	Protocol     string
+	PingInterval int
+	PingTimeout  int
+}

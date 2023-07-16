@@ -143,3 +143,14 @@ func getTickers[T any](o GetTicker, c *Client) Response[T] {
 func getCurrentTime() uint64 {
 	return uint64(time.Now().UnixNano())
 }
+
+// Get Full Order Book - Level 2
+// https://docs.kucoin.com/futures/#get-full-order-book-level-2
+
+type Orderbook struct {
+	Symbol    string            `json:"symbol"`
+	Ask       [][]ujson.Float64 `json:"asks"`
+	Bid       [][]ujson.Float64 `json:"bids"`
+	Timestamp int               `json:"ts"`
+	Sequence  int               `json:"sequence"`
+}
