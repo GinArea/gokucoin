@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -13,18 +12,24 @@ import (
 )
 
 type WsClient struct {
-	c              *uws.Client
-	onConnected    func()
-	onDisconnected func()
-	onResponse     func(WsResponse) error
-	onTopic        func([]byte) error
+	c *uws.Client
+	// onConnected    func()
+	// onDisconnected func()
+	onTopic func([]byte) error
 }
 
-func NewWsClient() *WsClient {
+func NewWsClient(sign *Sign) *WsClient {
 
 	client := NewClient()
 
-	tokenInfo := client.GetWsToken()
+	var tokenInfo Response[WsTokenResponse]
+	if sign.key == "" || sign.secret == "" || sign.password == "" {
+		tokenInfo = client.GetPublicWsToken()
+	} else {
+		client.WithAuth(sign.key, sign.secret, sign.password)
+		tokenInfo = client.GetPrivateWsToken()
+	}
+
 	if len(tokenInfo.Data) > 0 {
 		token := tokenInfo.Data[0].Token
 		endPoint := tokenInfo.Data[0].InstanceServers[0].Endpoint
@@ -36,23 +41,29 @@ func NewWsClient() *WsClient {
 	return nil
 }
 
-func (c *Client) GetWsToken() Response[WsTokenResponse] {
-	return PostPub[WsTokenResponse](c, "bullet-public", nil, func(h uhttp.Responce) (r Response[WsTokenResponse], er error) {
-		if h.BodyExists() {
-			raw := new(item[WsTokenResponse])
-			h.Json(raw)
-			r.Time = getCurrentTime()
-			r.Error = raw.Error()
-			if r.Ok() {
-				res := WsTokenResponse{
-					Token:           raw.Data.Token,
-					InstanceServers: raw.Data.InstanceServers,
-				}
-				r.Data = []WsTokenResponse{res}
+func (c *Client) GetPrivateWsToken() Response[WsTokenResponse] {
+	return Post[WsTokenResponse](c, "bullet-private", nil, prepareTokeInfo)
+}
+
+func (c *Client) GetPublicWsToken() Response[WsTokenResponse] {
+	return PostPub[WsTokenResponse](c, "bullet-public", nil, prepareTokeInfo)
+}
+
+func prepareTokeInfo(h uhttp.Responce) (r Response[WsTokenResponse], er error) {
+	if h.BodyExists() {
+		raw := new(item[WsTokenResponse])
+		h.Json(raw)
+		r.Time = getCurrentTime()
+		r.Error = raw.Error()
+		if r.Ok() {
+			res := WsTokenResponse{
+				Token:           raw.Data.Token,
+				InstanceServers: raw.Data.InstanceServers,
 			}
+			r.Data = []WsTokenResponse{res}
 		}
-		return
-	})
+	}
+	return
 }
 
 func (o *WsClient) Close() {
@@ -71,16 +82,6 @@ func (o *WsClient) WithLog(log *ulog.Log) *WsClient {
 	o.c.WithLog(log)
 	return o
 }
-
-// func (o *WsClient) WithBaseUrl(url string) *WsClient {
-// 	o.c.WithBase(url)
-// 	return o
-// }
-
-// func (o *WsClient) WithPath(path string) *WsClient {
-// 	o.c.WithPath(path)
-// 	return o
-// }
 
 func (o *WsClient) WithProxy(proxy string) *WsClient {
 	o.c.WithProxy(proxy)
@@ -114,11 +115,6 @@ func (o *WsClient) WithOnDisconnected(f func()) *WsClient {
 	return o
 }
 
-func (o *WsClient) WithOnResponse(f func(WsResponse) error) *WsClient {
-	o.onResponse = f
-	return o
-}
-
 func (o *WsClient) WithOnTopic(f func([]byte) error) *WsClient {
 	o.onTopic = f
 	return o
@@ -138,22 +134,22 @@ func (o *WsClient) Send(r WsRequest) {
 	o.c.SendJson(r)
 }
 
-func (o *WsClient) Subscribe(s string) {
+func (o *WsClient) Subscribe(s string, isPrivateChannel bool) {
 	o.Send(WsRequest{
 		Id:             getRandomInt32(),
 		Type:           "subscribe",
 		Topic:          s,
-		PrivateChannel: false,
+		PrivateChannel: isPrivateChannel,
 		Response:       false,
 	})
 }
 
-func (o *WsClient) Unsubscribe(s string) {
+func (o *WsClient) Unsubscribe(s string, isPrivateChannel bool) {
 	o.Send(WsRequest{
 		Id:             getRandomInt32(),
 		Type:           "unsubscribe",
 		Topic:          s,
-		PrivateChannel: false,
+		PrivateChannel: isPrivateChannel,
 		Response:       false,
 	})
 }
@@ -174,15 +170,10 @@ func (o *WsClient) onMessage(messageType int, data []byte) {
 	var r WsResponse
 	err := json.Unmarshal(data, &r)
 	if err == nil {
-		fmt.Printf("Topic: %s; Type: %s \n", r.Topic, r.Type)
-		if r.Valid() {
-			if o.onResponse != nil {
-				err = o.onResponse(r)
-			}
-		} else {
-			if o.onTopic != nil {
-				err = o.onTopic(data)
-			}
+		// fmt.Printf("Topic: %s; Type: %s \n", r.Topic, r.Type)
+		// fmt.Printf("Full msg: %s \n", r)
+		if o.onTopic != nil {
+			err = o.onTopic(data)
 		}
 	}
 	if err != nil {

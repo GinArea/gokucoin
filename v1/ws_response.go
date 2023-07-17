@@ -5,14 +5,10 @@ import (
 )
 
 type WsResponse struct {
-	Id    string `json:"id"`
-	Type  string `json:"type"`
-	Topic string `json:"topic"`
-}
-
-func (o WsResponse) Valid() bool {
-	//TODO непонятно как обрабатывать
-	return false
+	Id      string `json:"id"`
+	Type    string `json:"type"`
+	Topic   string `json:"topic"`
+	Subject string `json:"subject"`
 }
 
 func (o WsResponse) Log(log *ulog.Log) {

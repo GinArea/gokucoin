@@ -13,7 +13,7 @@ type WsPublic struct {
 
 func NewWsPublic() *WsPublic {
 	o := new(WsPublic)
-	o.c = NewWsClient()
+	o.c = NewWsClient(&Sign{})
 	o.subscriptions = NewSubscriptions(o)
 	return o
 }
@@ -38,11 +38,6 @@ func (o *WsPublic) WithLog(log *ulog.Log) *WsPublic {
 	o.c.WithLog(log)
 	return o
 }
-
-// func (o *WsPublic) WithBaseUrl(url string) *WsPublic {
-// 	o.c.WithBaseUrl(url)
-// 	return o
-// }
 
 func (o *WsPublic) WithProxy(proxy string) *WsPublic {
 	o.c.WithProxy(proxy)
@@ -75,11 +70,11 @@ func (o *WsPublic) WithOnDisconnected(f func()) *WsPublic {
 }
 
 func (o *WsPublic) subscribe(topic string) {
-	o.c.Subscribe(topic)
+	o.c.Subscribe(topic, false)
 }
 
 func (o *WsPublic) unsubscribe(topic string) {
-	o.c.Unsubscribe(topic)
+	o.c.Unsubscribe(topic, false)
 }
 
 func (o *WsPublic) Run() {
@@ -89,14 +84,8 @@ func (o *WsPublic) Run() {
 		}
 		o.subscriptions.subscribeAll()
 	})
-	o.c.WithOnResponse(o.onResponse)
 	o.c.WithOnTopic(o.onTopic)
 	o.c.Run()
-}
-
-func (o *WsPublic) onResponse(r WsResponse) error {
-	r.Log(o.c.Log())
-	return nil
 }
 
 func (o *WsPublic) onTopic(data []byte) error {
@@ -104,9 +93,5 @@ func (o *WsPublic) onTopic(data []byte) error {
 }
 
 func (o *WsPublic) OrderBook(symbol string) *Executor[Orderbook] {
-	return NewExecutor[Orderbook](getTopicName(symbol), o.subscriptions)
-}
-
-func getTopicName(symbol string) string {
-	return "/contractMarket/level2Depth50:" + symbol
+	return NewExecutor[Orderbook]("/contractMarket/level2Depth50:"+symbol, o.subscriptions)
 }

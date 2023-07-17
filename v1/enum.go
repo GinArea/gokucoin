@@ -29,6 +29,16 @@ const (
 	MarketStop OrderType = "market_stop"
 )
 
+type ChangeReasons string
+
+const (
+	MarginChange                 ChangeReasons = "marginChange"
+	PositionChange               ChangeReasons = "positionChange"
+	Liquidation                  ChangeReasons = "liquidation"
+	AutoAppendMarginStatusChange ChangeReasons = "autoAppendMarginStatusChange"
+	Adl                          ChangeReasons = "adl"
+)
+
 type StopType string
 
 const (
@@ -56,4 +66,24 @@ type TimeInForce string
 const (
 	GoodTillCancel    TimeInForce = "GTC"
 	ImmediateOrCancel TimeInForce = "IOC"
+)
+
+// для OrderShot
+type OrderStatusType string
+
+const (
+	OpenStatusMatch      OrderStatusType = "open"
+	MatchStatusMatch     OrderStatusType = "match"
+	FilledStatusMatch    OrderStatusType = "filled"
+	CancelledStatusMatch OrderStatusType = "cancelled"
+	UpdateStatusMatch    OrderStatusType = "update"
+)
+
+// для OrderShot
+type TradeOrderStatus string
+
+const (
+	TradeOpenStatus  TradeOrderStatus = "open"
+	TradeDoneStatus  TradeOrderStatus = "done"
+	TradeMatchStatus TradeOrderStatus = "match"
 )
