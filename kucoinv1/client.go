@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/msw-x/moon/uhttp"
+	"github.com/msw-x/moon/ulog"
 )
 
 type Client struct {
@@ -22,6 +23,16 @@ func NewClient() *Client {
 
 func (o *Client) WithTimeout(timeout time.Duration) *Client {
 	o.c.WithTimeout(timeout)
+	return o
+}
+
+func (o *Client) WithTraceFormat(log *ulog.Log, f uhttp.Format) *Client {
+	o.c.WithTraceFormat(log, f)
+	return o
+}
+
+func (o *Client) WithProxy(proxy string) *Client {
+	o.c.WithProxy(proxy)
 	return o
 }
 
