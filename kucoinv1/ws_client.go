@@ -23,10 +23,10 @@ func NewWsClient(sign *Sign) *WsClient {
 	client := NewClient()
 
 	var tokenInfo Response[WsTokenResponse]
-	if sign.key == "" || sign.secret == "" || sign.password == "" {
+	if sign.Key == "" || sign.Secret == "" || sign.Password == "" {
 		tokenInfo = client.GetPublicWsToken()
 	} else {
-		client.WithAuth(sign.key, sign.secret, sign.password)
+		client.WithAuth(sign.Key, sign.Secret, sign.Password)
 		tokenInfo = client.GetPrivateWsToken()
 	}
 

@@ -19,16 +19,16 @@ const (
 )
 
 type Sign struct {
-	key      string
-	secret   string
-	password string
+	Key      string
+	Secret   string
+	Password string
 }
 
 func NewSign(key, secret, password string) *Sign {
 	o := new(Sign)
-	o.key = key
-	o.secret = secret
-	o.password = password
+	o.Key = key
+	o.Secret = secret
+	o.Password = password
 	return o
 }
 
@@ -59,17 +59,17 @@ func (o *Sign) header(h http.Header, s string, needPartnerHeader bool, path stri
 	}
 	fmt.Println(preSignString)
 
-	kcApiSign := signHmac(preSignString, o.secret)
+	kcApiSign := signHmac(preSignString, o.Secret)
 
 	if needPartnerHeader {
 		h.Set("KC-API-PARTNER", partner)
-		h.Set("KC-API-PARTNER-SIGN", signHmac(ts+partner+o.key, kcApiKey))
+		h.Set("KC-API-PARTNER-SIGN", signHmac(ts+partner+o.Key, kcApiKey))
 	}
 
-	h.Set("KC-API-KEY", o.key)
+	h.Set("KC-API-KEY", o.Key)
 	h.Set("KC-API-SIGN", kcApiSign)
 	h.Set("KC-API-TIMESTAMP", ts)
-	h.Set("KC-API-PASSPHRASE", signHmac(o.password, o.secret))
+	h.Set("KC-API-PASSPHRASE", signHmac(o.Password, o.Secret))
 	h.Set("KC-API-KEY-VERSION", "2")
 }
 

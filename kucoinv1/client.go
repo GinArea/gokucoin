@@ -1,6 +1,10 @@
 package kucoinv1
 
-import "github.com/msw-x/moon/uhttp"
+import (
+	"time"
+
+	"github.com/msw-x/moon/uhttp"
+)
 
 type Client struct {
 	c          *uhttp.Client
@@ -13,6 +17,11 @@ func NewClient() *Client {
 	o.c = uhttp.NewClient()
 	o.WithBaseUrl(MainBaseUrl)
 	o.WithPath(ApiVersion)
+	return o
+}
+
+func (o *Client) WithTimeout(timeout time.Duration) *Client {
+	o.c.WithTimeout(timeout)
 	return o
 }
 
