@@ -1,4 +1,4 @@
-package v1
+package kucoinv1
 
 type RateLimit struct {
 	Remaining       int   `http:"X-RateLimit-Remaining"`

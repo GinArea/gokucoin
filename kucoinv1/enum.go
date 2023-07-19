@@ -1,4 +1,4 @@
-package v1
+package kucoinv1
 
 // contractStatuc (https://docs.kucoin.com/futures/#get-open-contract-list)
 type ContractStatus string

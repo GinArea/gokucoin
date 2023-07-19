@@ -1,4 +1,4 @@
-package v1
+package kucoinv1
 
 type Response[T any] struct {
 	Time     uint64

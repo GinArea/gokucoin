@@ -1,4 +1,4 @@
-package v1
+package kucoinv1
 
 import (
 	"crypto/hmac"
