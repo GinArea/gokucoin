@@ -28,6 +28,16 @@ func (o *Error) Error() string {
 	return fmt.Sprintf("code[%s]: %s", o.Code, o.Text)
 }
 
+func (o *Error) SymbolIsNotWhitelisted() bool {
+	//return o.Code == 10029
+	return false
+}
+
+func (o *Error) RequestParameterError() bool {
+	//return o.Code == 10001
+	return false
+}
+
 func (o *Error) ApiKeyInvalid() bool {
 	codes := []string{
 		// 10003, // API key is invalid
@@ -39,17 +49,17 @@ func (o *Error) ApiKeyInvalid() bool {
 
 func (o *Error) ApiKeyExpired() bool {
 	// return o.Code == 33004
-	return true
+	return false
 }
 
 func (o *Error) TooManyVisits() bool {
 	// return o.Code == 10006
-	return true
+	return false
 }
 
 func (o *Error) UnmatchedIp() bool {
 	// return o.Code == 10010
-	return true
+	return false
 }
 
 func (o *Error) KycNeeded() bool {

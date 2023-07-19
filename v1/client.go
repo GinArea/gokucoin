@@ -3,8 +3,9 @@ package v1
 import "github.com/msw-x/moon/uhttp"
 
 type Client struct {
-	c *uhttp.Client
-	s *Sign
+	c          *uhttp.Client
+	s          *Sign
+	onNetError func(err error, attempt int) bool
 }
 
 func NewClient() *Client {
@@ -39,6 +40,11 @@ func (o *Client) WithAppendPath(path string) *Client {
 
 func (o *Client) WithAuth(key, secret, password string) *Client {
 	o.s = NewSign(key, secret, password)
+	return o
+}
+
+func (o *Client) WithOnNetError(onNetError func(err error, attempt int) bool) *Client {
+	o.onNetError = onNetError
 	return o
 }
 

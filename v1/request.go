@@ -8,6 +8,21 @@ import (
 )
 
 func request[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
+	var attempt int
+	for {
+		r = req(c, method, path, request, sign, transform)
+		if r.NetError && c.onNetError != nil {
+			if c.onNetError(r.Error, attempt) {
+				attempt++
+				continue
+			}
+		}
+		break
+	}
+	return
+}
+
+func req[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
 	var perf *uhttp.Performer
 	switch method {
 	case http.MethodGet:
@@ -37,6 +52,7 @@ func request[T any](c *Client, method string, path string, request any, sign boo
 		}
 	} else {
 		r.Error = h.Error
+		r.NetError = true
 	}
 	return
 }

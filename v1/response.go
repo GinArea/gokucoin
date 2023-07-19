@@ -1,10 +1,11 @@
 package v1
 
 type Response[T any] struct {
-	Time  uint64
-	Data  []T
-	Limit RateLimit
-	Error error
+	Time     uint64
+	Data     []T
+	Limit    RateLimit
+	Error    error
+	NetError bool
 }
 
 type nestedResponse[T any] struct {
