@@ -94,6 +94,25 @@ func (o *Client) GetOpenContracts(v GetOpenContracts) Response[OpenContract] {
 	return v.Do(o)
 }
 
+func (o *Client) GetOpenContract(market string) Response[OpenContract] {
+	return getOpenContract[OpenContract](market, o)
+}
+
+func getOpenContract[T any](market string, c *Client) Response[T] {
+	return GetPub[T](c.contracts(), market, GetOpenContracts{}, func(h uhttp.Responce) (r Response[T], er error) {
+		if h.BodyExists() {
+			raw := new(item[T])
+			h.Json(raw)
+			r.Time = getCurrentTime()
+			r.Error = raw.Error()
+			if r.Ok() {
+				r.Data, r.Error = []T{raw.Data}, nil
+			}
+		}
+		return
+	})
+}
+
 // Get Real-Time Ticker <- получение информации по ценам переданного тикера
 // https://docs.kucoin.com/futures/#get-real-time-ticker
 //
