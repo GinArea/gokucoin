@@ -9,25 +9,25 @@ import (
 // https://docs.kucoin.com/futures/#place-an-order
 
 type PlaceOrder struct {
-	ClientOid     string
-	Side          Side
-	Symbol        string
-	Type          OrderType
-	Leverage      float64
-	Remark        string
-	Stop          StopType
-	StopPriceType StopPriceType
-	StopPrice     float64
-	ReduceOnly    bool
-	CloseOrder    bool
-	ForceHold     bool
-	Price         float64
-	Size          float64
-	TimeInForce   TimeInForce
-	PostOnly      bool
-	Hidden        bool
-	Iceberg       bool
-	VisibleSize   float64
+	ClientOid     string        `json:",omitempty"`
+	Side          Side          `json:",omitempty"`
+	Symbol        string        `json:",omitempty"`
+	Type          OrderType     `json:",omitempty"`
+	Leverage      ujson.Float64 `json:",omitempty"`
+	Remark        string        `json:",omitempty"`
+	Stop          StopType      `json:",omitempty"`
+	StopPriceType StopPriceType `json:",omitempty"`
+	StopPrice     ujson.Float64 `json:",omitempty"`
+	ReduceOnly    bool          `json:",omitempty"`
+	CloseOrder    bool          `json:",omitempty"`
+	ForceHold     bool          `json:",omitempty"`
+	Price         ujson.Float64 `json:",omitempty"`
+	Size          ujson.Float64 `json:",omitempty"`
+	TimeInForce   TimeInForce   `json:",omitempty"`
+	PostOnly      bool          `json:",omitempty"`
+	Hidden        bool          `json:",omitempty"`
+	Iceberg       bool          `json:",omitempty"`
+	VisibleSize   ujson.Float64 `json:",omitempty"`
 }
 
 type OrderId struct {
