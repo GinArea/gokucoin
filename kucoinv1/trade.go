@@ -157,7 +157,7 @@ type DetailsOfSingleOrder struct {
 	CancelExist    bool
 	CreatedAt      ujson.TimeMs
 	UpdatedAt      ujson.TimeMs
-	EndAt          int64
+	EndAt          ujson.TimeMs
 	OrderTime      int64
 	SettleCurrency string
 	Status         Status
