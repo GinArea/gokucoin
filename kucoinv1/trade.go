@@ -155,8 +155,8 @@ type DetailsOfSingleOrder struct {
 	Tags           string
 	IsActive       bool
 	CancelExist    bool
-	CreatedAt      int64
-	UpdatedAt      int64
+	CreatedAt      ujson.TimeMs
+	UpdatedAt      ujson.TimeMs
 	EndAt          int64
 	OrderTime      int64
 	SettleCurrency string
