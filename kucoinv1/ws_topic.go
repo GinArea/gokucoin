@@ -61,6 +61,6 @@ type WalletShot struct {
 	Timestamp        ujson.Int64
 	OrderMargin      ujson.Float64
 	WithdrawHold     ujson.Float64
-	AvailableBalance ujson.Float64
-	HoldBalance      ujson.Float64
+	AvailableBalance ujson.StringFloat64
+	HoldBalance      ujson.StringFloat64
 }
