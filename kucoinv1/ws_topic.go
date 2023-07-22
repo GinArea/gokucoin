@@ -48,10 +48,10 @@ type OrderShot struct {
 	CanceledSize ujson.Float64
 	TradeId      string
 	ClientOid    string
-	OrderTime    int64
+	OrderTime    ujson.TimeMs
 	OldSize      ujson.Float64
 	Liquidity    string
-	Ts           ujson.Int64
+	Ts           ujson.TimeMs
 }
 
 // Account Balance Events
