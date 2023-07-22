@@ -20,25 +20,28 @@ type WsClient struct {
 
 func NewWsClient(sign *Sign) *WsClient {
 
-	client := NewClient()
-
-	var tokenInfo Response[WsTokenResponse]
-	if sign.Key == "" || sign.Secret == "" || sign.Password == "" {
-		tokenInfo = client.GetPublicWsToken()
-	} else {
-		client.WithAuth(sign.Key, sign.Secret, sign.Password)
-		tokenInfo = client.GetPrivateWsToken()
+	o := new(WsClient)
+	o.c = uws.NewClient("any_string")
+	//функция, для получения корректного url для подключения по ws
+	getUrlFunc := func(string) string {
+		client := NewClient()
+		var tokenInfo Response[WsTokenResponse]
+		if sign.Key == "" || sign.Secret == "" || sign.Password == "" {
+			tokenInfo = client.GetPublicWsToken()
+		} else {
+			client.WithAuth(sign.Key, sign.Secret, sign.Password)
+			tokenInfo = client.GetPrivateWsToken()
+		}
+		if len(tokenInfo.Data) > 0 {
+			token := tokenInfo.Data[0].Token
+			endPoint := tokenInfo.Data[0].InstanceServers[0].Endpoint
+			return endPoint + "?token=" + token
+		}
+		return "empty_wss_host"
 	}
-
-	if len(tokenInfo.Data) > 0 {
-		token := tokenInfo.Data[0].Token
-		endPoint := tokenInfo.Data[0].InstanceServers[0].Endpoint
-		url := endPoint + "?token=" + token
-		o := new(WsClient)
-		o.c = uws.NewClient(url)
-		return o
-	}
-	return nil
+	//при каждом (пере)подключении вызывается функция, которая получает корректный url
+	o.c.WithOnPreDial(getUrlFunc)
+	return o
 }
 
 func (c *Client) GetPrivateWsToken() Response[WsTokenResponse] {

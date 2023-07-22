@@ -2,14 +2,14 @@ module github.com/ginarea/gokucoin
 
 go 1.18
 
-require (	
+require (
 	github.com/gorilla/websocket v1.5.0
-	github.com/msw-x/moon v0.2.56 
+	github.com/msw-x/moon v0.2.58
 )
 
 require (
-	github.com/google/uuid v1.3.0	
+	github.com/google/uuid v1.3.0
 	golang.org/x/exp v0.0.0-20221126150942-6ab00d035af9
 )
 
-require github.com/BurntSushi/toml v1.2.0 	
+require github.com/BurntSushi/toml v1.2.0
