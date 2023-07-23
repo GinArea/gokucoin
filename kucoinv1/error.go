@@ -3,12 +3,14 @@ package kucoinv1
 import (
 	"fmt"
 
+	"github.com/msw-x/moon/ujson"
 	"golang.org/x/exp/slices"
 )
 
 // Error
+// Список ошибок - https://docs.kucoin.com/futures/#requests
 type Error struct {
-	Code string
+	Code ujson.Int64
 	Text string
 }
 
@@ -21,11 +23,11 @@ func (o *Error) Std() error {
 }
 
 func (o *Error) Empty() bool {
-	return o.Code == "200000"
+	return o.Code == 200000
 }
 
 func (o *Error) Error() string {
-	return fmt.Sprintf("code[%s]: %s", o.Code, o.Text)
+	return fmt.Sprintf("code[%d]: %s", o.Code.Value(), o.Text)
 }
 
 func (o *Error) SymbolIsNotWhitelisted() bool {
@@ -34,56 +36,59 @@ func (o *Error) SymbolIsNotWhitelisted() bool {
 }
 
 func (o *Error) RequestParameterError() bool {
-	//return o.Code == 10001
-	return false
+	codes := []int64{
+		100001, // There are invalid parameters
+		100003, // Contract parameter invalid
+		300016, // The leverage cannot be greater than xxx
+		300018, // clientOid parameter repeated
+	}
+
+	return slices.Contains(codes, o.Code.Value())
 }
 
 func (o *Error) ApiKeyInvalid() bool {
-	codes := []string{
-		// 10003, // API key is invalid
-		// 10004, // Error sign, please check your signature generation algorithm.
-		// 10005, // Permission denied, please check your API key permissions
+	codes := []int64{
+		400003, // KC-API-KEY not exists
+		400004, // Invalid KC-API-PASSPHRASE
+		400007, // Access Denied -- Your API key does not have sufficient permissions to access the URI
+		411100, // User is frozen -- Please contact us via support center
 	}
-	return slices.Contains(codes, o.Code)
+	return slices.Contains(codes, o.Code.Value())
 }
 
 func (o *Error) ApiKeyExpired() bool {
-	// return o.Code == 33004
+
+	// не существует такой ошибки
 	return false
 }
 
 func (o *Error) TooManyVisits() bool {
-	// return o.Code == 10006
-	return false
+	codes := []int64{
+		1015,   // 	cloudflare frequency limit according to IP, block 30s
+		200002, // rate limit of each private endpoint of kucoin, based on user uid+endpoint mode limit, block10s
+	}
+	return slices.Contains(codes, o.Code.Value())
 }
 
 func (o *Error) UnmatchedIp() bool {
-	// return o.Code == 10010
-	return false
+	return o.Code == 400006 // The IP address is not in the API whitelist
 }
 
 func (o *Error) KycNeeded() bool {
-	codes := []string{
-		// 10024,  // Compliance rules triggered
-		// 131004, // KYC needed
-	}
-	return slices.Contains(codes, o.Code)
+	// не существует такой ошибки
+	return false
 }
 
 func (o *Error) Timeout() bool {
-	codes := []string{
-		// 10000,  // Server Timeout
-		// 170007, // Timeout waiting for response from backend server.
-		// 170146, // Order creation timeout
-		// 170147, // Order cancellation timeout
-		// 177002, // Timeout
+	codes := []int64{
+		429000, // kucoin stand-alone capacity limit. It can be understood that the server is overloaded.
 	}
-	return slices.Contains(codes, o.Code)
+	return slices.Contains(codes, o.Code.Value())
 }
 
 func (o *Error) InsufficientBalance() bool {
-	codes := []string{
-		// 110004, // Wallet balance is insufficient
+	codes := []int64{
+		300003, // Balance insufficient
 	}
-	return slices.Contains(codes, o.Code)
+	return slices.Contains(codes, o.Code.Value())
 }

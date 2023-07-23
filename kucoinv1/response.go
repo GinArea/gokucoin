@@ -1,5 +1,7 @@
 package kucoinv1
 
+import "github.com/msw-x/moon/ujson"
+
 type Response[T any] struct {
 	Time     uint64
 	Data     []T
@@ -9,7 +11,7 @@ type Response[T any] struct {
 }
 
 type nestedResponse[T any] struct {
-	Code string
+	Code ujson.Int64
 	Data struct {
 		CurrentPage int64
 		PageSize    int64
@@ -19,13 +21,13 @@ type nestedResponse[T any] struct {
 }
 
 type response[T any] struct {
-	Code string
+	Code ujson.Int64
 	Data []T
 	Msg  string
 }
 
 type item[T any] struct {
-	Code string
+	Code ujson.Int64
 	Msg  string
 	Data T
 }
@@ -52,7 +54,7 @@ func (o *nestedResponse[T]) Error() error {
 	return getError(o.Code, o.Msg)
 }
 
-func getError(code string, msg string) error {
+func getError(code ujson.Int64, msg string) error {
 	e := Error{
 		Code: code,
 		Text: msg,
