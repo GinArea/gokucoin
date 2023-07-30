@@ -9,6 +9,7 @@ import (
 	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ulog"
 	"github.com/msw-x/moon/uws"
+	"golang.org/x/exp/slices"
 )
 
 type WsClient struct {
@@ -175,7 +176,8 @@ func (o *WsClient) onMessage(messageType int, data []byte) {
 	if err == nil {
 		// fmt.Printf("Topic: %s; Type: %s \n", r.Topic, r.Type)
 		// fmt.Printf("Full msg: %s \n", r)
-		if o.onTopic != nil {
+		skipTypes := []string{"welcome", "pong"}
+		if o.onTopic != nil && !slices.Contains(skipTypes, r.Type) {
 			err = o.onTopic(data)
 		}
 	}
