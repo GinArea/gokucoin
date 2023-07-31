@@ -1,9 +1,11 @@
 package kucoinv1
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
+	"github.com/msw-x/moon/ufmt"
 	"github.com/msw-x/moon/uhttp"
 )
 
@@ -32,7 +34,11 @@ func req[T any](c *Client, method string, path string, request any, sign bool, t
 	h := perf.Do()
 	if h.Error == nil {
 		r.StatusCode = h.StatusCode
-		r, _ = transform(h)
+		if h.StatusCode == http.StatusOK {
+			r, _ = transform(h)
+		} else {
+			r.Error = errors.New(ufmt.Join(h.Status, h.Text()))
+		}
 		if sign {
 			r.SetErrorIfNil(h.HeaderTo(&r.Limit))
 		}

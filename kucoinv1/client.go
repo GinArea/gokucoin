@@ -40,6 +40,7 @@ func (o *Client) Clone() *Client {
 	r := new(Client)
 	r.c = o.c.Clone()
 	r.s = o.s
+	r.onTransportError = o.onTransportError
 	return r
 }
 
