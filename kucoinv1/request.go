@@ -7,21 +7,6 @@ import (
 	"github.com/msw-x/moon/uhttp"
 )
 
-func request[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
-	var attempt int
-	for {
-		r = req(c, method, path, request, sign, transform)
-		if r.NetError && c.onNetError != nil {
-			if c.onNetError(r.Error, attempt) {
-				attempt++
-				continue
-			}
-		}
-		break
-	}
-	return
-}
-
 func req[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
 	var perf *uhttp.Performer
 	switch method {
@@ -46,13 +31,28 @@ func req[T any](c *Client, method string, path string, request any, sign bool, t
 	}
 	h := perf.Do()
 	if h.Error == nil {
+		r.StatusCode = h.StatusCode
 		r, _ = transform(h)
 		if sign {
 			r.SetErrorIfNil(h.HeaderTo(&r.Limit))
 		}
 	} else {
 		r.Error = h.Error
-		r.NetError = true
+	}
+	return
+}
+
+func request[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
+	var attempt int
+	for {
+		r = req(c, method, path, request, sign, transform)
+		if r.StatusCode != http.StatusOK && c.onTransportError != nil {
+			if c.onTransportError(r.Error, r.StatusCode, attempt) {
+				attempt++
+				continue
+			}
+		}
+		break
 	}
 	return
 }

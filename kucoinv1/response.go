@@ -3,11 +3,11 @@ package kucoinv1
 import "github.com/msw-x/moon/ujson"
 
 type Response[T any] struct {
-	Time     uint64
-	Data     []T
-	Limit    RateLimit
-	Error    error
-	NetError bool
+	Time       uint64
+	Data       []T
+	Limit      RateLimit
+	Error      error
+	StatusCode int
 }
 
 type nestedResponse[T any] struct {
