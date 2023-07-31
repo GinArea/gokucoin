@@ -4,7 +4,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -57,7 +56,7 @@ func (o *Sign) header(h http.Header, s string, needPartnerHeader bool, path stri
 		}
 		preSignString = preSignString + delimeter + s
 	}
-	fmt.Println(preSignString)
+	// fmt.Println(preSignString)
 
 	kcApiSign := signHmac(preSignString, o.Secret)
 
