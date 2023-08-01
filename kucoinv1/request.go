@@ -34,7 +34,7 @@ func req[T any](c *Client, method string, path string, request any, sign bool, t
 	h := perf.Do()
 	if h.Error == nil {
 		r.StatusCode = h.StatusCode
-		if h.StatusCode == http.StatusOK {
+		if h.StatusCode == http.StatusOK || h.StatusCode == http.StatusTooManyRequests {
 			r, _ = transform(h)
 		} else {
 			r.Error = errors.New(ufmt.Join(h.Status, h.Text()))
