@@ -39,7 +39,6 @@ func getAccountOverview[T any](o GetAccountOverview, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(item[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data = []T{raw.Data}

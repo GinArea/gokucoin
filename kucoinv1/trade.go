@@ -47,7 +47,6 @@ func placeOrder[T any](o PlaceOrder, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(item[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data = []T{raw.Data}
@@ -109,7 +108,6 @@ func getFills[T any](o GetFills, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(nestedResponse[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data = raw.Data.Items
@@ -181,7 +179,6 @@ func getDetailsOfSingleOrder[T any](o GetDetailsOfSingleOrder, c *Client) (res R
 		if h.BodyExists() {
 			raw := new(item[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data = []T{raw.Data}

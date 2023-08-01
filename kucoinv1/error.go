@@ -57,7 +57,6 @@ func (o *Error) ApiKeyInvalid() bool {
 }
 
 func (o *Error) ApiKeyExpired() bool {
-
 	// не существует такой ошибки
 	return false
 }

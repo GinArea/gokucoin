@@ -3,7 +3,6 @@ package kucoinv1
 import "github.com/msw-x/moon/ujson"
 
 type Response[T any] struct {
-	Time       uint64
 	Data       []T
 	Limit      RateLimit
 	Error      error

@@ -57,7 +57,6 @@ func prepareTokeInfo(h uhttp.Responce) (r Response[WsTokenResponse], er error) {
 	if h.BodyExists() {
 		raw := new(item[WsTokenResponse])
 		h.Json(raw)
-		r.Time = getCurrentTime()
 		r.Error = raw.Error()
 		if r.Ok() {
 			res := WsTokenResponse{

@@ -1,8 +1,6 @@
 package kucoinv1
 
 import (
-	"time"
-
 	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ujson"
 )
@@ -76,7 +74,6 @@ func getOpenContracts[T any](o GetOpenContracts, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(response[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data, r.Error = raw.Data, nil
@@ -103,7 +100,6 @@ func getOpenContract[T any](market string, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(item[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data, r.Error = []T{raw.Data}, nil
@@ -149,7 +145,6 @@ func getTickers[T any](o GetTicker, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(item[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data = []T{raw.Data}
@@ -157,10 +152,6 @@ func getTickers[T any](o GetTicker, c *Client) Response[T] {
 		}
 		return
 	})
-}
-
-func getCurrentTime() uint64 {
-	return uint64(time.Now().UnixNano())
 }
 
 // Get Full Order Book - Level 2

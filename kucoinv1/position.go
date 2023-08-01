@@ -66,7 +66,6 @@ func getPositions[T any](o GetPositions, c *Client) Response[T] {
 		if h.BodyExists() {
 			raw := new(response[T])
 			h.Json(raw)
-			r.Time = getCurrentTime()
 			r.Error = raw.Error()
 			if r.Ok() {
 				r.Data = raw.Data
