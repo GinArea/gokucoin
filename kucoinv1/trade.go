@@ -22,12 +22,12 @@ type PlaceOrder struct {
 	CloseOrder    bool          `json:",omitempty"`
 	ForceHold     bool          `json:",omitempty"`
 	Price         ujson.Float64 `json:",omitempty"`
-	Size          ujson.Float64 `json:",omitempty"`
+	Size          ujson.Int64   `json:",omitempty"`
 	TimeInForce   TimeInForce   `json:",omitempty"`
 	PostOnly      bool          `json:",omitempty"`
 	Hidden        bool          `json:",omitempty"`
 	Iceberg       bool          `json:",omitempty"`
-	VisibleSize   ujson.Float64 `json:",omitempty"`
+	VisibleSize   ujson.Int64   `json:",omitempty"`
 }
 
 type OrderId struct {
