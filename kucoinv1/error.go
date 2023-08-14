@@ -63,7 +63,7 @@ func (o *Error) ApiKeyExpired() bool {
 
 func (o *Error) TooManyVisits() bool {
 	codes := []int64{
-		1015,   // 	cloudflare frequency limit according to IP, block 30s
+		1015,   // cloudflare frequency limit according to IP, block 30s
 		200002, // rate limit of each private endpoint of kucoin, based on user uid+endpoint mode limit, block10s
 	}
 	return slices.Contains(codes, o.Code.Value())
@@ -80,6 +80,7 @@ func (o *Error) KycNeeded() bool {
 
 func (o *Error) Timeout() bool {
 	codes := []int64{
+		100000, // 500 Service not available temporarily, please try it later
 		429000, // kucoin stand-alone capacity limit. It can be understood that the server is overloaded.
 	}
 	return slices.Contains(codes, o.Code.Value())
