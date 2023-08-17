@@ -33,7 +33,6 @@ func req[T any](c *Client, method string, path string, request any, sign bool, t
 	}
 	h := perf.Do()
 	if h.Error == nil {
-		r.StatusCode = h.StatusCode
 		if h.StatusCode == http.StatusOK || h.StatusCode == http.StatusTooManyRequests || h.StatusCode == http.StatusInternalServerError {
 			r, _ = transform(h)
 		} else {
@@ -42,6 +41,7 @@ func req[T any](c *Client, method string, path string, request any, sign bool, t
 		if sign {
 			r.SetErrorIfNil(h.HeaderTo(&r.Limit))
 		}
+		r.StatusCode = h.StatusCode
 	} else {
 		r.Error = h.Error
 	}
