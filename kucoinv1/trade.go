@@ -117,6 +117,77 @@ func getFills[T any](o GetFills, c *Client) Response[T] {
 	})
 }
 
+// Add Margin Manually
+// https://docs.kucoin.com/futures/#add-margin-manually
+
+type AddMarginManually struct {
+	Symbol string  `url:",omitempty"`
+	Margin float64 `url:",omitempty"`
+	BizNo  string  `url:",omitempty"`
+}
+
+type AddingMarginResponse struct {
+	Id                string
+	Symbol            string
+	AutoDeposit       bool
+	MaintMarginReq    ujson.Float64
+	RiskLimit         ujson.Float64
+	RealLeverage      ujson.Float64
+	CrossMode         bool
+	DelevPercentage   ujson.Float64
+	OpeningTimestamp  ujson.Int64
+	CurrentTimestamp  ujson.Int64
+	CurrentQty        ujson.Int64
+	CurrentCost       ujson.Float64
+	CurrentComm       ujson.Float64
+	UnrealisedCost    ujson.Float64
+	RealisedGrossCost ujson.Float64
+	RealisedCost      ujson.Float64
+	IsOpen            bool
+	MarkPrice         ujson.Float64
+	MarkValue         ujson.Float64
+	PostCost          ujson.Float64
+	PosCross          ujson.Float64
+	PosInit           ujson.Float64
+	PosComm           ujson.Float64
+	PosLoss           ujson.Float64
+	PosMargin         ujson.Float64
+	PosMaint          ujson.Float64
+	MaintMargin       ujson.Float64
+	RealisedGrossPnl  ujson.Float64
+	RealisedPnl       ujson.Float64
+	UnrealisedPnl     ujson.Float64
+	UnrealisedPnlPcnt ujson.Float64
+	UnrealisedRoePcnt ujson.Float64
+	AvgEntryPrice     ujson.Float64
+	LiquidationPrice  ujson.Float64
+	BankruptPrice     ujson.Float64
+	UserId            ujson.Int64
+	SettleCurrency    string
+}
+
+func (o *Client) AddMarginManually(v AddMarginManually) Response[AddingMarginResponse] {
+	return v.Do(o)
+}
+
+func (o AddMarginManually) Do(c *Client) Response[AddingMarginResponse] {
+	return addMarginManually[AddingMarginResponse](o, c)
+}
+
+func addMarginManually[T any](o AddMarginManually, c *Client) Response[T] {
+	return Post[T](c, "position/margin/deposit-margin", o, func(h uhttp.Responce) (r Response[T], er error) {
+		if h.BodyExists() {
+			raw := new(item[T])
+			h.Json(raw)
+			r.Error = raw.Error()
+			if r.Ok() {
+				r.Data = []T{raw.Data}
+			}
+		}
+		return
+	})
+}
+
 // Get Details of a Single Order - нет комиссии
 // https://docs.kucoin.com/futures/#get-details-of-a-single-order
 
