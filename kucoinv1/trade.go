@@ -117,6 +117,44 @@ func getFills[T any](o GetFills, c *Client) Response[T] {
 	})
 }
 
+// Add Margin Manually
+// https://docs.kucoin.com/futures/#add-margin-manually
+
+type AddMarginManually struct {
+	Symbol string  `url:",omitempty"`
+	Margin float64 `url:",omitempty"`
+	BizNo  string  `url:",omitempty"`
+}
+
+type AddingMarginResponse struct {
+	Id          string
+	Symbol      string
+	AutoDeposit bool
+	//TODO
+}
+
+func (o *Client) AddMarginManually(v AddMarginManually) Response[AddingMarginResponse] {
+	return v.Do(o)
+}
+
+func (o AddMarginManually) Do(c *Client) Response[AddingMarginResponse] {
+	return addMarginManually[AddingMarginResponse](o, c)
+}
+
+func addMarginManually[T any](o AddMarginManually, c *Client) Response[T] {
+	return Post[T](c, "position/margin/deposit-margin", o, func(h uhttp.Responce) (r Response[T], er error) {
+		if h.BodyExists() {
+			raw := new(item[T])
+			h.Json(raw)
+			r.Error = raw.Error()
+			if r.Ok() {
+				r.Data = []T{raw.Data}
+			}
+		}
+		return
+	})
+}
+
 // Get Details of a Single Order - нет комиссии
 // https://docs.kucoin.com/futures/#get-details-of-a-single-order
 
