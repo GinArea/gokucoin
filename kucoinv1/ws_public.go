@@ -13,7 +13,7 @@ type WsPublic struct {
 
 func NewWsPublic() *WsPublic {
 	o := new(WsPublic)
-	o.c = NewWsClient(&Sign{})
+	o.c = NewWsClient(nil)
 	o.subscriptions = NewSubscriptions(o)
 	return o
 }
@@ -88,10 +88,10 @@ func (o *WsPublic) Run() {
 	o.c.Run()
 }
 
-func (o *WsPublic) onTopic(data []byte) error {
-	return o.subscriptions.processTopic(data)
-}
-
 func (o *WsPublic) OrderBook(symbol string) *Executor[Orderbook] {
 	return NewExecutor[Orderbook]("/contractMarket/level2Depth50:"+symbol, o.subscriptions)
+}
+
+func (o *WsPublic) onTopic(data []byte) error {
+	return o.subscriptions.processTopic(data)
 }

@@ -68,7 +68,6 @@ const (
 	ImmediateOrCancel TimeInForce = "IOC"
 )
 
-// для OrderShot
 type OrderStatusType string
 
 const (
@@ -79,7 +78,6 @@ const (
 	UpdateStatusMatch    OrderStatusType = "update"
 )
 
-// для OrderShot
 type TradeOrderStatus string
 
 const (

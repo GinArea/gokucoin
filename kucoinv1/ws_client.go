@@ -6,67 +6,23 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ulog"
 	"github.com/msw-x/moon/uws"
 	"golang.org/x/exp/slices"
 )
 
 type WsClient struct {
-	c *uws.Client
-	// onConnected    func()
-	// onDisconnected func()
+	c       *uws.Client
+	s       *Sign
 	onTopic func([]byte) error
 }
 
-func NewWsClient(sign *Sign) *WsClient {
-
+func NewWsClient(s *Sign) *WsClient {
 	o := new(WsClient)
-	o.c = uws.NewClient("any_string")
-	//функция, для получения корректного url для подключения по ws
-	getUrlFunc := func(string) string {
-		client := NewClient()
-		var tokenInfo Response[WsTokenResponse]
-		if sign.Key == "" || sign.Secret == "" || sign.Password == "" {
-			tokenInfo = client.GetPublicWsToken()
-		} else {
-			client.WithAuth(sign.Key, sign.Secret, sign.Password)
-			tokenInfo = client.GetPrivateWsToken()
-		}
-		if len(tokenInfo.Data) > 0 {
-			token := tokenInfo.Data[0].Token
-			endPoint := tokenInfo.Data[0].InstanceServers[0].Endpoint
-			return endPoint + "?token=" + token
-		}
-		return "empty_wss_host"
-	}
-	//при каждом (пере)подключении вызывается функция, которая получает корректный url
-	o.c.WithOnPreDial(getUrlFunc)
+	o.s = s
+	o.c = uws.NewClient("ws")
+	o.c.WithOnPreDial(o.getUrl)
 	return o
-}
-
-func (c *Client) GetPrivateWsToken() Response[WsTokenResponse] {
-	return Post[WsTokenResponse](c, "bullet-private", nil, prepareTokeInfo)
-}
-
-func (c *Client) GetPublicWsToken() Response[WsTokenResponse] {
-	return PostPub[WsTokenResponse](c, "bullet-public", nil, prepareTokeInfo)
-}
-
-func prepareTokeInfo(h uhttp.Responce) (r Response[WsTokenResponse], er error) {
-	if h.BodyExists() {
-		raw := new(item[WsTokenResponse])
-		h.Json(raw)
-		r.Error = raw.Error()
-		if r.Ok() {
-			res := WsTokenResponse{
-				Token:           raw.Data.Token,
-				InstanceServers: raw.Data.InstanceServers,
-			}
-			r.Data = []WsTokenResponse{res}
-		}
-	}
-	return
 }
 
 func (o *WsClient) Close() {
@@ -157,6 +113,29 @@ func (o *WsClient) Unsubscribe(s string, isPrivateChannel bool) {
 	})
 }
 
+func (o *WsClient) getUrl(string) string {
+	client := NewClient()
+	var r Response[WsToken]
+	if o.s == nil {
+		r = client.GetPublicWsToken()
+	} else {
+		client.WithAuth(o.s.Key, o.s.Secret, o.s.Password)
+		r = client.GetPrivateWsToken()
+	}
+	if r.Ok() {
+		if len(r.Data.InstanceServers) > 0 {
+			token := r.Data.Token
+			endPoint := r.Data.InstanceServers[0].Endpoint
+			return endPoint + "?token=" + token
+		} else {
+			o.Log().Error("instance servers is empty")
+		}
+	} else {
+		o.Log().Error("token is missing:", r.Error)
+	}
+	return ""
+}
+
 func (o *WsClient) ping() {
 	o.Send(WsRequest{
 		Id:   getRandomInt32(),
@@ -173,8 +152,6 @@ func (o *WsClient) onMessage(messageType int, data []byte) {
 	var r WsResponse
 	err := json.Unmarshal(data, &r)
 	if err == nil {
-		// fmt.Printf("Topic: %s; Type: %s \n", r.Topic, r.Type)
-		// fmt.Printf("Full msg: %s \n", r)
 		skipTypes := []string{"welcome", "pong"}
 		if o.onTopic != nil && !slices.Contains(skipTypes, r.Type) {
 			err = o.onTopic(data)

@@ -8,7 +8,7 @@ import (
 )
 
 // Error
-// Список ошибок - https://docs.kucoin.com/futures/#requests
+// https://docs.kucoin.com/futures/#requests
 type Error struct {
 	Code ujson.Int64
 	Text string

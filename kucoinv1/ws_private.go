@@ -11,9 +11,9 @@ type WsPrivate struct {
 	subscriptions *Subscriptions
 }
 
-func NewWsPrivate(sign *Sign) *WsPrivate {
+func NewWsPrivate(key, secret, password string) *WsPrivate {
 	o := new(WsPrivate)
-	o.c = NewWsClient(sign)
+	o.c = NewWsClient(NewSign(key, secret, password))
 	o.subscriptions = NewSubscriptions(o)
 	return o
 }

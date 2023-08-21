@@ -23,6 +23,16 @@ func UnmarshalRawTopic[T any](raw RawTopic) (ret Topic[T], err error) {
 	return
 }
 
+// Get Full Order Book - Level 2
+// https://docs.kucoin.com/futures/#get-full-order-book-level-2
+type Orderbook struct {
+	Symbol    string            `json:"symbol"`
+	Ask       [][]ujson.Float64 `json:"asks"`
+	Bid       [][]ujson.Float64 `json:"bids"`
+	Timestamp int               `json:"ts"`
+	Sequence  int               `json:"sequence"`
+}
+
 // Position Change Events
 // https://docs.kucoin.com/futures/#position-change-events
 type PositionShot struct {

@@ -1,7 +1,6 @@
 package kucoinv1
 
 import (
-	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ujson"
 )
 
@@ -53,24 +52,12 @@ type Position struct {
 	UserId            ujson.Float64
 }
 
-func (o *Client) GetPositions(v GetPositions) Response[Position] {
-	return v.Do(o)
-}
-
 func (o GetPositions) Do(c *Client) Response[Position] {
-	return getPositions[Position](o, c)
+	return Get(c, "positions", o, forward[Position])
 }
 
-func getPositions[T any](o GetPositions, c *Client) Response[T] {
-	return Get[T](c, "positions", o, func(h uhttp.Responce) (r Response[T], er error) {
-		if h.BodyExists() {
-			raw := new(response[T])
-			h.Json(raw)
-			r.Error = raw.Error()
-			if r.Ok() {
-				r.Data = raw.Data
-			}
-		}
-		return
-	})
+func (o *Client) GetPositions(currency string) Response[Position] {
+	return GetPositions{
+		Currency: currency,
+	}.Do(o)
 }

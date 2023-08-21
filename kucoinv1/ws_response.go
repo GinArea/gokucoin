@@ -16,15 +16,8 @@ func (o WsResponse) Log(log *ulog.Log) {
 	case "ping":
 	case "pong":
 	case "subscribe":
-		// if o.Success {
-		// 	log.Info("subscribe: success")
-		// } else {
-		// 	log.Error("subscribe:", o.Message)
-		// }
 	case "unsubscribe":
-		// log.Info("unsubscribe:", ufmt.SuccessFailure(o.Success))
 	case "error":
-		// log.Error("error", o.Id)
 	default:
 		log.Error("invalid response:", o.Type)
 	}

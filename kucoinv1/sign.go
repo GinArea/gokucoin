@@ -32,7 +32,6 @@ func NewSign(key, secret, password string) *Sign {
 }
 
 func (o *Sign) HeaderGet(h http.Header, v url.Values, path string) {
-
 	encodedParams := encodeSortParams(v)
 	o.header(h, encodedParams, false, path, "GET")
 }
@@ -42,11 +41,9 @@ func (o *Sign) HeaderPost(h http.Header, body []byte, path string) {
 }
 
 func (o *Sign) header(h http.Header, s string, needPartnerHeader bool, path string, method string) {
-
-	//необходимо получить preSignString в формате: timestamp + GET + url
-	//например:
+	//preSignString format: timestamp + GET + url
+	//example:
 	// 1689235726523GET/api/v1/account-overview?currency=USDT
-
 	ts := o.timestamp()
 	preSignString := ts + method + "/" + ApiVersion + "/" + path
 	if s != "" {
@@ -56,15 +53,11 @@ func (o *Sign) header(h http.Header, s string, needPartnerHeader bool, path stri
 		}
 		preSignString = preSignString + delimeter + s
 	}
-	// fmt.Println(preSignString)
-
 	kcApiSign := signHmac(preSignString, o.Secret)
-
 	if needPartnerHeader {
 		h.Set("KC-API-PARTNER", partner)
 		h.Set("KC-API-PARTNER-SIGN", signHmac(ts+partner+o.Key, kcApiKey))
 	}
-
 	h.Set("KC-API-KEY", o.Key)
 	h.Set("KC-API-SIGN", kcApiSign)
 	h.Set("KC-API-TIMESTAMP", ts)

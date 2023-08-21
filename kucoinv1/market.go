@@ -1,15 +1,13 @@
 package kucoinv1
 
 import (
-	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ujson"
 )
 
-// Get Open Contract List <- получение информации по всем маркетам (Submit request to get the info of all open contracts)
+// Get Open Contract List
 // https://docs.kucoin.com/futures/#get-open-contract-list
-//
-// no parameters
-type GetOpenContracts struct{}
+type GetOpenContracts struct {
+}
 
 type OpenContract struct {
 	Symbol                  string
@@ -69,53 +67,28 @@ type OpenContract struct {
 	PriceChg                ujson.Float64
 }
 
-func getOpenContracts[T any](o GetOpenContracts, c *Client) Response[T] {
-	return GetPub[T](c.contracts(), "active", o, func(h uhttp.Responce) (r Response[T], er error) {
-		if h.BodyExists() {
-			raw := new(response[T])
-			h.Json(raw)
-			r.Error = raw.Error()
-			if r.Ok() {
-				r.Data, r.Error = raw.Data, nil
-			}
-		}
-		return
-	})
+func (o GetOpenContracts) Do(c *Client) Response[[]OpenContract] {
+	return GetPub(c.contracts(), "active", o, forward[[]OpenContract])
 }
 
-func (o GetOpenContracts) Do(c *Client) Response[OpenContract] {
-	return getOpenContracts[OpenContract](o, c)
+func (o GetOpenContracts) DoSingle(c *Client, market string) Response[OpenContract] {
+	return GetPub(c.contracts(), market, o, forward[OpenContract])
 }
 
-func (o *Client) GetOpenContracts(v GetOpenContracts) Response[OpenContract] {
-	return v.Do(o)
+func (o *Client) GetOpenContracts() Response[[]OpenContract] {
+	return GetOpenContracts{}.Do(o)
 }
 
 func (o *Client) GetOpenContract(market string) Response[OpenContract] {
-	return getOpenContract[OpenContract](market, o)
+	return GetOpenContracts{}.DoSingle(o, market)
 }
 
-func getOpenContract[T any](market string, c *Client) Response[T] {
-	return GetPub[T](c.contracts(), market, GetOpenContracts{}, func(h uhttp.Responce) (r Response[T], er error) {
-		if h.BodyExists() {
-			raw := new(item[T])
-			h.Json(raw)
-			r.Error = raw.Error()
-			if r.Ok() {
-				r.Data, r.Error = []T{raw.Data}, nil
-			}
-		}
-		return
-	})
-}
-
-// Get Real-Time Ticker <- получение информации по ценам переданного тикера
+// Get Real-Time Ticker
 // https://docs.kucoin.com/futures/#get-real-time-ticker
 //
-// parameters
-// ticker -> String [Symbol of the contract]
+//	ticker -> String [Symbol of the contract]
 type GetTicker struct {
-	Symbol string `url:",omitempty"`
+	Symbol string
 }
 
 type Ticker struct {
@@ -132,35 +105,12 @@ type Ticker struct {
 	Ts           int64
 }
 
-func (o *Client) GetTicker(v GetTicker) Response[Ticker] {
-	return v.Do(o)
-}
-
 func (o GetTicker) Do(c *Client) Response[Ticker] {
-	return getTickers[Ticker](o, c)
+	return GetPub(c, "ticker", o, forward[Ticker])
 }
 
-func getTickers[T any](o GetTicker, c *Client) Response[T] {
-	return GetPub[T](c, "ticker", o, func(h uhttp.Responce) (r Response[T], er error) {
-		if h.BodyExists() {
-			raw := new(item[T])
-			h.Json(raw)
-			r.Error = raw.Error()
-			if r.Ok() {
-				r.Data = []T{raw.Data}
-			}
-		}
-		return
-	})
-}
-
-// Get Full Order Book - Level 2
-// https://docs.kucoin.com/futures/#get-full-order-book-level-2
-
-type Orderbook struct {
-	Symbol    string            `json:"symbol"`
-	Ask       [][]ujson.Float64 `json:"asks"`
-	Bid       [][]ujson.Float64 `json:"bids"`
-	Timestamp int               `json:"ts"`
-	Sequence  int               `json:"sequence"`
+func (o *Client) GetTicker(symbol string) Response[Ticker] {
+	return GetTicker{
+		Symbol: symbol,
+	}.Do(o)
 }

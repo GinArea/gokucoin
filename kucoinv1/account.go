@@ -1,16 +1,13 @@
 package kucoinv1
 
 import (
-	"github.com/msw-x/moon/uhttp"
 	"github.com/msw-x/moon/ujson"
 )
 
 // Get Account Overview
 // https://docs.kucoin.com/futures/#get-account-overview
-
-//parameters
-//currency	String	[Optional] Currecny ,including XBT,USDT,Default XBT
-
+//
+//	currency String [Optional] Currecny, including XBT,USDT,Default XBT
 type GetAccountOverview struct {
 	Currency string `url:",omitempty"`
 }
@@ -26,24 +23,12 @@ type AccountOverview struct {
 	Currency         string
 }
 
-func (o *Client) GetAccountOverview(v GetAccountOverview) Response[AccountOverview] {
-	return v.Do(o)
-}
-
 func (o GetAccountOverview) Do(c *Client) Response[AccountOverview] {
-	return getAccountOverview[AccountOverview](o, c)
+	return Get(c, "account-overview", o, forward[AccountOverview])
 }
 
-func getAccountOverview[T any](o GetAccountOverview, c *Client) Response[T] {
-	return Get[T](c, "account-overview", o, func(h uhttp.Responce) (r Response[T], er error) {
-		if h.BodyExists() {
-			raw := new(item[T])
-			h.Json(raw)
-			r.Error = raw.Error()
-			if r.Ok() {
-				r.Data = []T{raw.Data}
-			}
-		}
-		return
-	})
+func (o *Client) GetAccountOverview(currency string) Response[AccountOverview] {
+	return GetAccountOverview{
+		Currency: currency,
+	}.Do(o)
 }

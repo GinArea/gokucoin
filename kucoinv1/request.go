@@ -9,7 +9,7 @@ import (
 	"github.com/msw-x/moon/uhttp"
 )
 
-func req[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
+func req[R, T any](c *Client, method string, path string, request any, transform func(R) (T, error), sign bool) (r Response[T]) {
 	var perf *uhttp.Performer
 	switch method {
 	case http.MethodGet:
@@ -33,25 +33,32 @@ func req[T any](c *Client, method string, path string, request any, sign bool, t
 	}
 	h := perf.Do()
 	if h.Error == nil {
+		r.StatusCode = h.StatusCode
 		if h.StatusCode == http.StatusOK || h.StatusCode == http.StatusTooManyRequests || h.StatusCode == http.StatusInternalServerError {
-			r, _ = transform(h)
+			if h.BodyExists() {
+				raw := new(response[R])
+				h.Json(raw)
+				r.Error = raw.Error()
+				if r.Ok() {
+					r.Data, r.Error = transform(raw.Data)
+				}
+			}
 		} else {
 			r.Error = errors.New(ufmt.Join(h.Status, h.Text()))
 		}
 		if sign {
 			r.SetErrorIfNil(h.HeaderTo(&r.Limit))
 		}
-		r.StatusCode = h.StatusCode
 	} else {
 		r.Error = h.Error
 	}
 	return
 }
 
-func request[T any](c *Client, method string, path string, request any, sign bool, transform func(uhttp.Responce) (Response[T], error)) (r Response[T]) {
+func request[R, T any](c *Client, method string, path string, request any, transform func(R) (T, error), sign bool) (r Response[T]) {
 	var attempt int
 	for {
-		r = req(c, method, path, request, sign, transform)
+		r = req(c, method, path, request, transform, sign)
 		if r.StatusCode != http.StatusOK && c.onTransportError != nil {
 			if c.onTransportError(r.Error, r.StatusCode, attempt) {
 				attempt++
@@ -63,18 +70,18 @@ func request[T any](c *Client, method string, path string, request any, sign boo
 	return
 }
 
-func GetPub[T any](c *Client, path string, req any, transform func(uhttp.Responce) (Response[T], error)) Response[T] {
-	return request[T](c, http.MethodGet, path, req, false, transform)
+func GetPub[R, T any](c *Client, path string, req any, transform func(R) (T, error)) Response[T] {
+	return request(c, http.MethodGet, path, req, transform, false)
 }
 
-func Get[T any](c *Client, path string, req any, transform func(uhttp.Responce) (Response[T], error)) Response[T] {
-	return request[T](c, http.MethodGet, path, req, true, transform)
+func PostPub[R, T any](c *Client, path string, req any, transform func(R) (T, error)) Response[T] {
+	return request(c, http.MethodPost, path, req, transform, false)
 }
 
-func Post[T any](c *Client, path string, req any, transform func(uhttp.Responce) (Response[T], error)) Response[T] {
-	return request[T](c, http.MethodPost, path, req, true, transform)
+func Get[R, T any](c *Client, path string, req any, transform func(R) (T, error)) Response[T] {
+	return request(c, http.MethodGet, path, req, transform, true)
 }
 
-func PostPub[T any](c *Client, path string, req any, transform func(uhttp.Responce) (Response[T], error)) Response[T] {
-	return request[T](c, http.MethodPost, path, req, false, transform)
+func Post[R, T any](c *Client, path string, req any, transform func(R) (T, error)) Response[T] {
+	return request(c, http.MethodPost, path, req, transform, true)
 }
