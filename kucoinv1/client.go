@@ -1,6 +1,7 @@
 package kucoinv1
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/msw-x/moon/uhttp"
@@ -29,6 +30,12 @@ func (o *Client) WithTrace(trace func(uhttp.Responce)) *Client {
 	o.c.WithTrace(trace)
 	return o
 }
+
+func (o *Client) WithTransport(tranport *http.Transport) *Client {
+	o.c.WithTransport(tranport)
+	return o
+}
+
 func (o *Client) WithProxy(proxy string) *Client {
 	o.c.WithProxy(proxy)
 	return o
