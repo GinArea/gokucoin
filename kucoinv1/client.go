@@ -74,32 +74,11 @@ func (o *Client) WithOnTransportError(f OnTransportError) *Client {
 	return o
 }
 
+// Path helpers for public endpoints only
+// Note: Private endpoints pass path directly to Get/Post for correct signing
+
 func (o *Client) contracts() *Client {
 	return o.Copy().WithAppendPath("contracts")
-}
-
-func (o *Client) orders() *Client {
-	return o.Copy().WithAppendPath("orders")
-}
-
-func (o *Client) stopOrders() *Client {
-	return o.Copy().WithAppendPath("stopOrders")
-}
-
-func (o *Client) positions() *Client {
-	return o.Copy().WithAppendPath("positions")
-}
-
-func (o *Client) accountOverview() *Client {
-	return o.Copy().WithAppendPath("account-overview")
-}
-
-func (o *Client) fundingHistory() *Client {
-	return o.Copy().WithAppendPath("funding-history")
-}
-
-func (o *Client) bulletPrivate() *Client {
-	return o.Copy().WithAppendPath("bullet-private")
 }
 
 func (o *Client) ticker() *Client {
