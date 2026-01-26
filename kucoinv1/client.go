@@ -87,7 +87,7 @@ func (o *Client) stopOrders() *Client {
 }
 
 func (o *Client) positions() *Client {
-	return o.Copy() // positions endpoint is at base path
+	return o.Copy().WithAppendPath("positions")
 }
 
 func (o *Client) accountOverview() *Client {
@@ -100,6 +100,14 @@ func (o *Client) fundingHistory() *Client {
 
 func (o *Client) bulletPrivate() *Client {
 	return o.Copy().WithAppendPath("bullet-private")
+}
+
+func (o *Client) ticker() *Client {
+	return o.Copy().WithAppendPath("ticker")
+}
+
+func (o *Client) kline() *Client {
+	return o.Copy().WithAppendPath("kline")
 }
 
 type OnTransportError func(err error, method string, statusCode int, attempt int) bool

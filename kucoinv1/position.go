@@ -53,7 +53,7 @@ type Position struct {
 }
 
 func (o GetPositions) Do(c *Client) Response[[]Position] {
-	return Get(c, "positions", o, forward[[]Position])
+	return Get(c.positions(), "", o, forward[[]Position])
 }
 
 func (o *Client) GetPositions(currency string) Response[[]Position] {
