@@ -78,4 +78,28 @@ func (o *Client) contracts() *Client {
 	return o.Copy().WithAppendPath("contracts")
 }
 
-type OnTransportError func(err error, statusCode int, attempt int) bool
+func (o *Client) orders() *Client {
+	return o.Copy().WithAppendPath("orders")
+}
+
+func (o *Client) stopOrders() *Client {
+	return o.Copy().WithAppendPath("stopOrders")
+}
+
+func (o *Client) positions() *Client {
+	return o.Copy() // positions endpoint is at base path
+}
+
+func (o *Client) accountOverview() *Client {
+	return o.Copy().WithAppendPath("account-overview")
+}
+
+func (o *Client) fundingHistory() *Client {
+	return o.Copy().WithAppendPath("funding-history")
+}
+
+func (o *Client) bulletPrivate() *Client {
+	return o.Copy().WithAppendPath("bullet-private")
+}
+
+type OnTransportError func(err error, method string, statusCode int, attempt int) bool
