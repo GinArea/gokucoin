@@ -20,7 +20,7 @@ const (
 type TimeInForce string
 
 const (
-	TimeInForceGTC TimeInForce = "GTC" // Good Till Canceled
+	TimeInForceGTC TimeInForce = "GTC" // Good Till Canceled - deafault value
 	TimeInForceIOC TimeInForce = "IOC" // Immediate Or Cancel
 	TimeInForceFOK TimeInForce = "FOK" // Fill Or Kill
 )
@@ -56,9 +56,9 @@ const (
 type PositionSide string
 
 const (
-	PositionSideLong  PositionSide = "long"
-	PositionSideShort PositionSide = "short"
-	PositionSideBoth  PositionSide = "both"
+	PositionSideLong  PositionSide = "LONG"
+	PositionSideShort PositionSide = "SHORT"
+	PositionSideBoth  PositionSide = "BOTH"
 )
 
 // Bar represents candlestick interval

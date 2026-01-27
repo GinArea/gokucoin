@@ -187,12 +187,12 @@ Query: symbol
 
 ### Orders (Private)
 
-#### Place Order
-Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/place-order
+#### Place Order (HF)
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order
 ```
-POST /api/v1/orders
+POST /api/v1/hf/orders
 Body: {
-  clientOid: string (required, unique ID),
+  clientOid: string (optional, unique ID, UUID recommended),
   side: "buy" | "sell",
   symbol: string,
   type: "limit" | "market",
@@ -200,13 +200,17 @@ Body: {
   size: string (base currency qty),
   funds: string (quote currency qty, market only),
   timeInForce: "GTC" | "GTT" | "IOC" | "FOK",
+  cancelAfter: long (seconds, requires GTT),
   postOnly: boolean,
   hidden: boolean,
   iceberg: boolean,
-  visibleSize: string
+  visibleSize: string,
+  stp: "CN" | "CO" | "CB" | "DC",
+  tags: string (max 20 ASCII),
+  remark: string (max 20 ASCII)
 }
 ```
-Returns: `{ orderId: string }`
+Returns: `{ orderId: string, clientOid: string }`
 
 #### Place Multiple Orders
 Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/place-multiple-orders
@@ -235,11 +239,13 @@ DELETE /api/v1/orders
 Query: symbol, tradeType (TRADE/MARGIN_TRADE/MARGIN_ISOLATED_TRADE)
 ```
 
-#### Get Order
-Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-orderid
+#### Get Order by ClientOid (HF)
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid
 ```
-GET /api/v1/orders/{orderId}
+GET /api/v1/hf/orders/client-order/{clientOid}
+Query: symbol (required)
 ```
+Note: Data available for 3x24 hours only for inactive orders.
 
 #### Get by Client OID
 Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid
@@ -496,9 +502,10 @@ DELETE /api/v1/orders/{orderId}
 #### Cancel All Orders
 Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-orders
 ```
-DELETE /api/v1/orders
+DELETE /api/v3/orders
 Query: symbol
 ```
+Note: `DELETE /api/v1/orders` deprecated since December 2024.
 
 #### Get Order
 Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderid
