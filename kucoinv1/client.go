@@ -11,11 +11,13 @@ type Client struct {
 	c                *uhttp.Client
 	s                *Sign
 	onTransportError OnTransportError
+	apiPath          string // API path for signing (e.g., "api/v1", "api/v2")
 }
 
 func NewClient() *Client {
 	o := new(Client)
 	o.c = uhttp.NewClient()
+	o.apiPath = ApiVersion
 	o.WithBaseUrl(MainBaseUrl)
 	o.WithPath(ApiVersion)
 	return o
@@ -46,6 +48,7 @@ func (o *Client) Copy() *Client {
 	r.c = o.c.Copy()
 	r.s = o.s
 	r.onTransportError = o.onTransportError
+	r.apiPath = o.apiPath
 	return r
 }
 
@@ -56,6 +59,7 @@ func (o *Client) WithBaseUrl(url string) *Client {
 
 func (o *Client) WithPath(path string) *Client {
 	o.c.WithPath(path)
+	o.apiPath = path
 	return o
 }
 

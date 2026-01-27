@@ -63,12 +63,14 @@ pre-sign = "1659523885000POST/api/v1/orders{\"symbol\":\"BTC-USDT\"...}"
 ## Account & Funding
 
 ### User Info
+Docs: https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info
 ```
 GET /api/v2/user-info
 ```
 Returns user account info including level, sub-account count.
 
 ### Accounts List
+Docs: https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot
 ```
 GET /api/v1/accounts
 Query: type (main/trade/margin/isolated), currency
@@ -76,47 +78,55 @@ Query: type (main/trade/margin/isolated), currency
 Returns all accounts with balance info.
 
 ### Account Balance (Single)
+Docs: https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot
 ```
 GET /api/v1/accounts/{accountId}
 ```
 
 ### Transferable Balance
+Docs: https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-transferable
 ```
 GET /api/v1/accounts/transferable
 Query: currency, type (MAIN/TRADE/MARGIN)
 ```
 
 ### Inner Transfer
+Docs: https://www.kucoin.com/docs-new/rest/account-info/account-funding/inner-transfer
 ```
 POST /api/v2/accounts/inner-transfer
 Body: clientOid, currency, from, to, amount
 ```
 
 ### Deposit Address
+Docs: https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address
 ```
 GET /api/v1/deposit-addresses
 Query: currency, chain (optional)
 ```
 
 ### Create Deposit Address
+Docs: https://www.kucoin.com/docs-new/rest/account-info/deposit/create-deposit-address
 ```
 POST /api/v1/deposit-addresses
 Body: currency, chain (optional)
 ```
 
 ### Deposits History
+Docs: https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-list
 ```
 GET /api/v1/deposits
 Query: currency, status, startAt, endAt
 ```
 
 ### Withdrawals History
+Docs: https://www.kucoin.com/docs-new/rest/account-info/withdrawal/get-withdrawal-list
 ```
 GET /api/v1/withdrawals
 Query: currency, status, startAt, endAt
 ```
 
 ### Apply Withdrawal
+Docs: https://www.kucoin.com/docs-new/rest/account-info/withdrawal/apply-withdraw
 ```
 POST /api/v1/withdrawals
 Body: currency, address, amount, chain, memo (optional)
@@ -129,6 +139,7 @@ Body: currency, address, amount, chain, memo (optional)
 ### Market Data (Public)
 
 #### Symbols List
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols
 ```
 GET /api/v2/symbols
 Query: market (optional, e.g., "USDS")
@@ -136,18 +147,22 @@ Query: market (optional, e.g., "USDS")
 Returns trading pairs with specs (baseCurrency, quoteCurrency, baseMinSize, priceIncrement, etc.)
 
 #### All Tickers
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers
 ```
 GET /api/v1/market/allTickers
 ```
 Returns price summary for all symbols.
 
 #### Single Ticker
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-24hr-stats
 ```
 GET /api/v1/market/stats
 Query: symbol
 ```
 
 #### Order Book (Level 2)
+Docs (Partial): https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-part-orderbook
+Docs (Full): https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-full-orderbook
 ```
 GET /api/v1/market/orderbook/level2_20
 GET /api/v1/market/orderbook/level2_100
@@ -157,12 +172,14 @@ Query: symbol
 Level2_20/100 are public, full Level2 requires auth.
 
 #### Candles (Klines)
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines
 ```
 GET /api/v1/market/candles
 Query: symbol, type (1min/5min/15min/30min/1hour/2hour/4hour/6hour/8hour/12hour/1day/1week), startAt, endAt
 ```
 
 #### Trade History
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-trade-histories
 ```
 GET /api/v1/market/histories
 Query: symbol
@@ -171,6 +188,7 @@ Query: symbol
 ### Orders (Private)
 
 #### Place Order
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/place-order
 ```
 POST /api/v1/orders
 Body: {
@@ -191,6 +209,7 @@ Body: {
 Returns: `{ orderId: string }`
 
 #### Place Multiple Orders
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/place-multiple-orders
 ```
 POST /api/v1/orders/multi
 Body: { symbol, orderList: [order...] }
@@ -198,38 +217,45 @@ Body: { symbol, orderList: [order...] }
 Max 5 orders per request.
 
 #### Cancel Order
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderid
 ```
 DELETE /api/v1/orders/{orderId}
 ```
 
 #### Cancel by Client OID
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid
 ```
 DELETE /api/v1/order/client-order/{clientOid}
 ```
 
 #### Cancel All Orders
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders
 ```
 DELETE /api/v1/orders
 Query: symbol, tradeType (TRADE/MARGIN_TRADE/MARGIN_ISOLATED_TRADE)
 ```
 
 #### Get Order
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-orderid
 ```
 GET /api/v1/orders/{orderId}
 ```
 
 #### Get by Client OID
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid
 ```
 GET /api/v1/order/client-order/{clientOid}
 ```
 
 #### List Orders
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-list
 ```
 GET /api/v1/orders
 Query: status (active/done), symbol, side, type, tradeType, startAt, endAt
 ```
 
 #### Recent Orders (24h)
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-recent-orders-list
 ```
 GET /api/v1/limit/orders
 ```
@@ -237,12 +263,14 @@ GET /api/v1/limit/orders
 ### Fills (Private)
 
 #### List Fills
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/fills/get-filled-list
 ```
 GET /api/v1/fills
 Query: orderId, symbol, side, type, tradeType, startAt, endAt
 ```
 
 #### Recent Fills (24h)
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/fills/get-recent-filled-list
 ```
 GET /api/v1/limit/fills
 ```
@@ -250,6 +278,7 @@ GET /api/v1/limit/fills
 ### Stop Orders
 
 #### Place Stop Order
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/stop-order/place-stop-order
 ```
 POST /api/v1/stop-order
 Body: {
@@ -262,22 +291,26 @@ Body: {
 ```
 
 #### Cancel Stop Order
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/stop-order/cancel-stop-order
 ```
 DELETE /api/v1/stop-order/{orderId}
 ```
 
 #### Cancel All Stop Orders
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/stop-order/cancel-stop-orders
 ```
 DELETE /api/v1/stop-order/cancel
 Query: symbol, tradeType, orderIds
 ```
 
 #### Get Stop Order
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/stop-order/get-stop-order
 ```
 GET /api/v1/stop-order/{orderId}
 ```
 
 #### List Stop Orders
+Docs: https://www.kucoin.com/docs-new/rest/spot-trading/stop-order/get-stop-order-list
 ```
 GET /api/v1/stop-order
 Query: symbol, side, type, tradeType, startAt, endAt
@@ -290,24 +323,28 @@ Query: symbol, side, type, tradeType, startAt, endAt
 ### Cross Margin
 
 #### Borrow
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/credit/margin-borrow
 ```
 POST /api/v3/margin/borrow
 Body: currency, size, timeInForce (IOC/FOK)
 ```
 
 #### Repay
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/credit/margin-repay
 ```
 POST /api/v3/margin/repay
 Body: currency, size
 ```
 
 #### Borrow History
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-margin-borrow-history
 ```
 GET /api/v3/margin/borrow
 Query: currency, status, startAt, endAt
 ```
 
 #### Repay History
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-margin-repay-history
 ```
 GET /api/v3/margin/repay
 Query: currency, startAt, endAt
@@ -316,18 +353,21 @@ Query: currency, startAt, endAt
 ### Isolated Margin
 
 #### Borrow
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/isolated-margin/isolated-margin-borrow
 ```
 POST /api/v3/isolated/borrow
 Body: symbol, currency, size, borrowStrategy (FOK/IOC)
 ```
 
 #### Repay
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/isolated-margin/isolated-margin-repay
 ```
 POST /api/v3/isolated/repay
 Body: symbol, currency, size
 ```
 
 #### Isolated Accounts
+Docs: https://www.kucoin.com/docs-new/rest/margin-trading/isolated-margin/get-isolated-margin-account
 ```
 GET /api/v3/isolated/accounts
 Query: symbol, quoteCurrency, queryType
@@ -342,29 +382,34 @@ Base URL: `https://api-futures.kucoin.com`
 ### Market Data (Public)
 
 #### Active Contracts
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols
 ```
 GET /api/v1/contracts/active
 ```
 Returns all active futures contracts with specs.
 
 #### Contract Detail
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol
 ```
 GET /api/v1/contracts/{symbol}
 ```
 
 #### Ticker
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-ticker
 ```
 GET /api/v1/ticker
 Query: symbol
 ```
 
 #### Order Book (Level 2)
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-part-orderbook
 ```
 GET /api/v1/level2/snapshot
 Query: symbol
 ```
 
 #### Klines
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines
 ```
 GET /api/v1/kline/query
 Query: symbol, granularity (1/5/15/30/60/120/240/480/720/1440/10080), from, to
@@ -372,28 +417,33 @@ Query: symbol, granularity (1/5/15/30/60/120/240/480/720/1440/10080), from, to
 Granularity in minutes.
 
 #### Trade History
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-trade-history
 ```
 GET /api/v1/trade/history
 Query: symbol
 ```
 
 #### Index Price
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-index-list
 ```
 GET /api/v1/index/query
 Query: symbol, startAt, endAt
 ```
 
 #### Mark Price
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-current-mark-price
 ```
 GET /api/v1/mark-price/{symbol}/current
 ```
 
 #### Funding Rate (Current)
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-current-funding-rate
 ```
 GET /api/v1/funding-rate/{symbol}/current
 ```
 
 #### Funding Rate (History)
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-public-funding-history
 ```
 GET /api/v1/contract/funding-rates
 Query: symbol, from, to
@@ -402,12 +452,14 @@ Query: symbol, from, to
 ### Account (Private)
 
 #### Account Overview
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/account/get-account-overview
 ```
 GET /api/v1/account-overview
 Query: currency (optional, default XBT)
 ```
 
 #### Transaction History
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/account/get-transaction-history
 ```
 GET /api/v1/transaction-history
 Query: type, currency, startAt, endAt
@@ -416,6 +468,7 @@ Query: type, currency, startAt, endAt
 ### Orders (Private)
 
 #### Place Order
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/place-order
 ```
 POST /api/v1/orders
 Body: {
@@ -435,34 +488,40 @@ Body: {
 ```
 
 #### Cancel Order
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-id
 ```
 DELETE /api/v1/orders/{orderId}
 ```
 
 #### Cancel All Orders
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-orders
 ```
 DELETE /api/v1/orders
 Query: symbol
 ```
 
 #### Get Order
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderid
 ```
 GET /api/v1/orders/{orderId}
 ```
 
 #### Get by Client OID
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-clientoid
 ```
 GET /api/v1/orders/byClientOid
 Query: clientOid
 ```
 
 #### List Orders
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-list
 ```
 GET /api/v1/orders
 Query: status (active/done), symbol, side, type, startAt, endAt
 ```
 
 #### Recent Done Orders (24h)
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders
 ```
 GET /api/v1/recentDoneOrders
 ```
@@ -470,6 +529,7 @@ GET /api/v1/recentDoneOrders
 ### Stop Orders (Private)
 
 #### Place Stop Order
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/place-order
 ```
 POST /api/v1/orders
 Body: {
@@ -481,6 +541,7 @@ Body: {
 ```
 
 #### Get Untriggered Stop Orders
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list
 ```
 GET /api/v1/stopOrders
 Query: symbol, side, type, startAt, endAt
@@ -489,29 +550,34 @@ Query: symbol, side, type, startAt, endAt
 ### Positions (Private)
 
 #### Get Position
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details
 ```
 GET /api/v1/position
 Query: symbol
 ```
 
 #### Get All Positions
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-list
 ```
 GET /api/v1/positions
 ```
 
 #### Auto-Deposit Status
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-auto-deposit-status
 ```
 GET /api/v1/position/autoDepositStatus
 Query: symbol
 ```
 
 #### Enable Auto-Deposit
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/enable-auto-deposit-margin
 ```
 POST /api/v1/position/margin/auto-deposit-status
 Body: symbol, status (true/false)
 ```
 
 #### Add Margin
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/add-margin-manually
 ```
 POST /api/v1/position/margin/deposit-margin
 Body: symbol, margin, bizNo
@@ -520,11 +586,13 @@ Body: symbol, margin, bizNo
 ### Risk Limit
 
 #### Get Risk Limit
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/risk-limit/get-futures-risk-limit
 ```
 GET /api/v1/contracts/risk-limit/{symbol}
 ```
 
 #### Adjust Risk Limit
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/risk-limit/modify-futures-risk-limit
 ```
 POST /api/v1/position/risk-limit-level/change
 Body: symbol, level
@@ -533,12 +601,14 @@ Body: symbol, level
 ### Fills (Private)
 
 #### List Fills
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-filled-list
 ```
 GET /api/v1/fills
 Query: orderId, symbol, side, type, startAt, endAt
 ```
 
 #### Recent Fills (24h)
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-recent-filled-list
 ```
 GET /api/v1/recentFills
 ```
@@ -546,6 +616,9 @@ GET /api/v1/recentFills
 ---
 
 ## WebSocket API
+
+Docs (Spot): https://www.kucoin.com/docs-new/websocket/spot-trading
+Docs (Futures): https://www.kucoin.com/docs-new/websocket/futures-trading
 
 ### Connection
 

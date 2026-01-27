@@ -5,6 +5,9 @@ const (
 	MainBaseUrl = "https://api-futures.kucoin.com"
 	ApiVersion  = "api/v1"
 
+	// Spot REST API
+	SpotBaseUrl = "https://api.kucoin.com"
+
 	// Futures WebSocket
 	WsPublicUrl = "wss://ws-api-futures.kucoin.com"
 	WsOrderUrl  = "wss://wsapi.kucoin.com"

@@ -53,9 +53,9 @@ func req[R, T any](c *Client, method string, path string, request any, transform
 		}
 		switch method {
 		case http.MethodGet:
-			c.s.HeaderGet(perf.Request.Header, perf.Request.Params, path)
+			c.s.HeaderGet(perf.Request.Header, perf.Request.Params, path, c.apiPath)
 		case http.MethodPost:
-			c.s.HeaderPost(perf.Request.Header, perf.Request.Body, path)
+			c.s.HeaderPost(perf.Request.Header, perf.Request.Body, path, c.apiPath)
 		}
 	}
 	h := perf.Do()

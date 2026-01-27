@@ -30,19 +30,19 @@ func (o *Sign) timestamp() string {
 	return strconv.FormatInt(time.Now().UnixMilli(), 10)
 }
 
-func (o *Sign) HeaderGet(h http.Header, v url.Values, path string) {
-	o.header(h, v.Encode(), path, "GET")
+func (o *Sign) HeaderGet(h http.Header, v url.Values, path string, apiPath string) {
+	o.header(h, v.Encode(), path, "GET", apiPath)
 }
 
-func (o *Sign) HeaderPost(h http.Header, body []byte, path string) {
-	o.header(h, string(body), path, "POST")
+func (o *Sign) HeaderPost(h http.Header, body []byte, path string, apiPath string) {
+	o.header(h, string(body), path, "POST", apiPath)
 }
 
-func (o *Sign) header(h http.Header, data string, path string, method string) {
+func (o *Sign) header(h http.Header, data string, path string, method string, apiPath string) {
 	ts := o.timestamp()
 
-	// Pre-sign: timestamp + method + /api/v1/path + body
-	preSign := ts + method + "/" + ApiVersion + "/" + path
+	// Pre-sign: timestamp + method + /api/vX/path + body
+	preSign := ts + method + "/" + apiPath + "/" + path
 	if data != "" {
 		if method == "GET" {
 			preSign += "?" + data

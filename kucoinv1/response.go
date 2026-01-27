@@ -31,3 +31,12 @@ func (o *response[T]) Error() error {
 	}
 	return e.Std()
 }
+
+// Paginated - generic paginated response wrapper
+type Paginated[T any] struct {
+	CurrentPage int `json:"currentPage"`
+	PageSize    int `json:"pageSize"`
+	TotalNum    int `json:"totalNum"`
+	TotalPage   int `json:"totalPage"`
+	Items       []T `json:"items"`
+}
