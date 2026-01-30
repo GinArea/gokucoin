@@ -17,8 +17,8 @@ type WsBase struct {
 	subscriptions  *Subscriptions
 }
 
-func (o *WsBase) init(s *Sign, privateChannel bool) {
-	o.c = NewWsClient(s)
+func (o *WsBase) init(s *Sign, privateChannel bool, category Category) {
+	o.c = NewWsClient(s).WithCategory(category)
 	o.privateChannel = privateChannel
 	o.subscriptions = NewSubscriptions(o)
 }

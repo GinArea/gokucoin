@@ -7,11 +7,13 @@ import (
 
 type WsPublic struct {
 	WsBase
+	category Category
 }
 
-func NewWsPublic() *WsPublic {
+func NewWsPublic(category Category) *WsPublic {
 	o := new(WsPublic)
-	o.init(nil, false)
+	o.category = category
+	o.init(nil, false, category)
 	return o
 }
 
@@ -64,6 +66,19 @@ func (o *WsPublic) Transport() *uws.Options {
 
 // Topic subscriptions
 
+// OrderBook subscribes to Level 5 order book updates for a symbol
+// Futures topic: /contractMarket/level2Depth5:{symbol}
+// https://www.kucoin.com/docs-new/3470083w0 (futures)
+// Spot topic: /spotMarket/level2Depth5:{symbol}
+// https://www.kucoin.com/docs-new/3470069w0 (Spot)
 func (o *WsPublic) OrderBook(symbol string) *Executor[Orderbook] {
-	return NewExecutor[Orderbook]("/contractMarket/level2Depth5:"+symbol, o.subscriptions)
+	return NewExecutor[Orderbook](o.orderbookTopic(symbol), o.subscriptions)
+}
+
+// orderbookTopic returns the appropriate topic based on category
+func (o *WsPublic) orderbookTopic(symbol string) string {
+	if o.category == Spot {
+		return "/spotMarket/level2Depth5:" + symbol
+	}
+	return "/contractMarket/level2Depth5:" + symbol
 }

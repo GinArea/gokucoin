@@ -1,5 +1,12 @@
 package kucoinv1
 
+type Category string
+
+const (
+	Spot    Category = "SPOT"
+	Futures Category = "FUTURES"
+)
+
 // Side represents order side
 type Side string
 

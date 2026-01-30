@@ -28,7 +28,8 @@ func UnmarshalRawTopic[T any](raw RawTopic) (ret Topic[T], err error) {
 }
 
 // Orderbook - Level 5 (Futures)
-// https://www.kucoin.com/docs-new/3470083w0
+// https://www.kucoin.com/docs-new/3470083w0 (futures)
+// https://www.kucoin.com/docs-new/3470069w0 (spot)
 type Orderbook struct {
 	Ask       [][]ujson.Float64 `json:"asks"`
 	Bid       [][]ujson.Float64 `json:"bids"`

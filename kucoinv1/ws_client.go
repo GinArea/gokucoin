@@ -13,6 +13,7 @@ import (
 type WsClient struct {
 	c          *uws.Client
 	s          *Sign
+	category   Category // Spot or Futures (determines token endpoint base URL)
 	onResponse func(WsResponse)
 	onTopic    func([]byte) error
 }
@@ -84,6 +85,11 @@ func (o *WsClient) WithOnTopic(f func([]byte) error) *WsClient {
 	return o
 }
 
+func (o *WsClient) WithCategory(category Category) *WsClient {
+	o.category = category
+	return o
+}
+
 func (o *WsClient) Run() {
 	o.c.WithOnPing(o.ping)
 	o.c.WithOnMessage(o.onMessage)
@@ -120,6 +126,10 @@ func (o *WsClient) Unsubscribe(s string, isPrivateChannel bool) {
 
 func (o *WsClient) getUrl(string) string {
 	client := NewClient()
+	// Use Spot base URL for Spot category token endpoint
+	if o.category == Spot {
+		client.WithBaseUrl(SpotBaseUrl)
+	}
 	var r Response[WsToken]
 	if o.s == nil {
 		r = client.GetPublicWsToken()

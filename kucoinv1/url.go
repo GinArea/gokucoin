@@ -9,8 +9,8 @@ const (
 	SpotBaseUrl = "https://api.kucoin.com"
 
 	// Futures WebSocket
-	WsPublicUrl = "wss://ws-api-futures.kucoin.com"
-	WsOrderUrl  = "wss://wsapi.kucoin.com"
+	// WsPublicUrl = "wss://ws-api-futures.kucoin.com"
+	// WsOrderUrl  = "wss://wsapi.kucoin.com"
 
 	// Broker (Futures)
 	BrokerPartner = "Ginareafutures"
