@@ -7,11 +7,13 @@ import (
 
 type WsPrivate struct {
 	WsBase
+	category Category
 }
 
-func NewWsPrivate(key, secret, password string) *WsPrivate {
+func NewWsPrivate(key, secret, password string, category Category) *WsPrivate {
 	o := new(WsPrivate)
-	o.init(NewSign(key, secret, password), true)
+	o.category = category
+	o.init(NewSign(key, secret, password), true, category)
 	return o
 }
 
@@ -68,14 +70,18 @@ func (o *WsPrivate) Positions() *Executor[PositionShot] {
 	return NewExecutor[PositionShot]("/contract/positionAll", o.subscriptions)
 }
 
-func (o *WsPrivate) Order(symbol string) *Executor[OrderShot] {
-	return NewExecutor[OrderShot]("/contractMarket/tradeOrders:"+symbol, o.subscriptions)
-}
-
-func (o *WsPrivate) Orders() *Executor[OrderShot] {
+func (o *WsPrivate) OrdersFutures() *Executor[OrderShot] {
 	return NewExecutor[OrderShot]("/contractMarket/tradeOrders", o.subscriptions)
 }
 
-func (o *WsPrivate) Wallet() *Executor[WalletShot] {
+func (o *WsPrivate) OrdersSpot() *Executor[OrderShotSpot] {
+	return NewExecutor[OrderShotSpot]("/spotMarket/tradeOrdersV2", o.subscriptions)
+}
+
+func (o *WsPrivate) WalletFutures() *Executor[WalletShot] {
 	return NewExecutor[WalletShot]("/contractAccount/wallet", o.subscriptions)
+}
+
+func (o *WsPrivate) WalletSpot() *Executor[WalletShotSpot] {
+	return NewExecutor[WalletShotSpot]("/account/balance", o.subscriptions)
 }

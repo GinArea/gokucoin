@@ -1,0 +1,19 @@
+{
+   "topic":"/spotMarket/tradeOrdersV2",
+   "type":"message",
+   "subject":"orderChange",
+   "userId":"647f4694f0a9430001793f5a",
+   "channelType":"private",
+   "data":{
+      "orderId":"697cbec2a318a10007b46868",
+      "orderTime":1769782978270,
+      "orderType":"market",
+      "originSize":"0.00012061",
+      "pt":1769782978288,
+      "side":"sell",
+      "status":"new",
+      "symbol":"BTC-USDT",
+      "ts":1769782978287000000,
+      "type":"received"
+   }
+}
