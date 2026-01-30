@@ -2,6 +2,8 @@ package kucoinv1
 
 import (
 	"encoding/json"
+	"fmt"
+	"strconv"
 
 	"github.com/msw-x/moon/ujson"
 )
@@ -187,4 +189,60 @@ type WalletShotSpot struct {
 	RelationEventId string `json:"relationEventId"`
 	// Time - timestamp of the event in milliseconds
 	Time ujson.Int64 `json:"time"`
+}
+
+// CandleShotSpot - Spot Candles/Klines (Spot API)
+// https://www.kucoin.com/docs-new/3470071w0
+type CandleShotSpot struct {
+	// Symbol - trading pair symbol (e.g., BTC-USDT)
+	Symbol string `json:"symbol"`
+	// Candles - OHLCV data as string array: [time, open, close, high, low, volume, turnover]
+	Candles []string `json:"candles"`
+	// Time - event timestamp in nanoseconds
+	Time int64 `json:"time"`
+}
+
+// Kline converts the string array candles data to a typed Kline struct
+// Note: WS order is [ts, open, close, high, low, volume, turnover]
+func (o *CandleShotSpot) Kline() (Kline, error) {
+	if len(o.Candles) < 7 {
+		return Kline{}, fmt.Errorf("candles: expected 7 elements, got %d", len(o.Candles))
+	}
+	ts, err := strconv.ParseInt(o.Candles[0], 10, 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[0] timestamp: %w", err)
+	}
+	open, err := strconv.ParseFloat(o.Candles[1], 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[1] open: %w", err)
+	}
+	close_, err := strconv.ParseFloat(o.Candles[2], 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[2] close: %w", err)
+	}
+	high, err := strconv.ParseFloat(o.Candles[3], 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[3] high: %w", err)
+	}
+	low, err := strconv.ParseFloat(o.Candles[4], 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[4] low: %w", err)
+	}
+	volume, err := strconv.ParseFloat(o.Candles[5], 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[5] volume: %w", err)
+	}
+	turnover, err := strconv.ParseFloat(o.Candles[6], 64)
+	if err != nil {
+		return Kline{}, fmt.Errorf("candles[6] turnover: %w", err)
+	}
+	return Kline{
+		Ts:       ts,
+		Open:     open,
+		High:     high,
+		Low:      low,
+		Close:    close_,
+		Volume:   volume,
+		Turnover: turnover,
+	}, nil
 }

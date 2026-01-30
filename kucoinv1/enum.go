@@ -114,3 +114,22 @@ const (
 	Bar1D  Bar = 1440
 	Bar1W  Bar = 10080
 )
+
+// CandleInterval represents WebSocket candle subscription interval (Spot)
+// https://www.kucoin.com/docs-new/3470071w0
+type CandleInterval string
+
+const (
+	CandleInterval1m  CandleInterval = "1min"
+	CandleInterval3m  CandleInterval = "3min"
+	CandleInterval15m CandleInterval = "15min"
+	CandleInterval30m CandleInterval = "30min"
+	CandleInterval1H  CandleInterval = "1hour"
+	CandleInterval2H  CandleInterval = "2hour"
+	CandleInterval4H  CandleInterval = "4hour"
+	CandleInterval6H  CandleInterval = "6hour"
+	CandleInterval8H  CandleInterval = "8hour"
+	CandleInterval12H CandleInterval = "12hour"
+	CandleInterval1D  CandleInterval = "1day"
+	CandleInterval1W  CandleInterval = "1week"
+)
