@@ -11,16 +11,19 @@ type WsResponse struct {
 	Subject string `json:"subject"`
 }
 
-//  need to add (???): "welcome", "ack", "message"
-
 func (o WsResponse) Log(log *ulog.Log) {
 	switch o.Type {
-	case "ping":
-	case "pong":
-	case "subscribe":
-	case "unsubscribe":
+	case "ping", "pong":
+		// Silent
+	case "welcome":
+		log.Info("connected")
+	case "message":
+		// Data, handled separately
+	case "subscribe", "unsubscribe":
+		log.Debug("subscription:", o.Topic)
 	case "error":
+		log.Error("error:", o.Topic)
 	default:
-		log.Error("invalid response:", o.Type)
+		log.Warning("unknown type:", o.Type)
 	}
 }

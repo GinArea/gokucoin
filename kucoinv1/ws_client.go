@@ -131,7 +131,7 @@ func (o *WsClient) getUrl(string) string {
 			o.Log().Error("instance servers is empty")
 		}
 	} else {
-		o.Log().Error("token is missing:", r.Error)
+		o.Log().Error("error:", r.Error)
 	}
 	return ""
 }

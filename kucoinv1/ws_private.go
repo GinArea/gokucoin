@@ -89,10 +89,6 @@ func (o *WsPrivate) unsubscribe(topic string) {
 	o.c.Unsubscribe(topic, true)
 }
 
-// func (o *WsPrivate) onResponse(r WsResponse) error {
-// 	return nil
-// }
-
 func (o *WsPrivate) onTopic(data []byte) error {
 	return o.subscriptions.processTopic(data)
 }
