@@ -6,92 +6,64 @@ import (
 )
 
 type WsPublic struct {
-	c             *WsClient
-	onConnected   func()
-	subscriptions *Subscriptions
+	WsBase
 }
 
 func NewWsPublic() *WsPublic {
 	o := new(WsPublic)
-	o.c = NewWsClient(nil)
-	o.subscriptions = NewSubscriptions(o)
+	o.init(nil, false)
 	return o
 }
 
-func (o *WsPublic) Close() {
-	o.c.Close()
-}
-
-func (o *WsPublic) Transport() *uws.Options {
-	return o.c.Transport()
-}
-
-func (o *WsPublic) Connected() bool {
-	return o.c.Connected()
-}
-
-func (o *WsPublic) Ready() bool {
-	return o.Connected()
-}
+// Builder methods (return *WsPublic for chaining)
 
 func (o *WsPublic) WithLog(log *ulog.Log) *WsPublic {
-	o.c.WithLog(log)
+	o.setLog(log)
 	return o
 }
 
 func (o *WsPublic) WithProxy(proxy string) *WsPublic {
-	o.c.WithProxy(proxy)
+	o.setProxy(proxy)
 	return o
 }
 
 func (o *WsPublic) WithLogRequest(enable bool) *WsPublic {
-	o.c.WithLogRequest(enable)
+	o.setLogRequest(enable)
 	return o
 }
 
 func (o *WsPublic) WithLogResponse(enable bool) *WsPublic {
-	o.c.WithLogResponse(enable)
+	o.setLogResponse(enable)
 	return o
 }
 
 func (o *WsPublic) WithOnDialError(f func(error) bool) *WsPublic {
-	o.c.WithOnDialError(f)
+	o.setOnDialError(f)
 	return o
 }
 
 func (o *WsPublic) WithOnConnected(f func()) *WsPublic {
-	o.onConnected = f
+	o.setOnConnected(f)
 	return o
 }
 
 func (o *WsPublic) WithOnDisconnected(f func()) *WsPublic {
-	o.c.WithOnDisconnected(f)
+	o.setOnDisconnected(f)
 	return o
 }
 
-func (o *WsPublic) subscribe(topic string) {
-	o.c.Subscribe(topic, false)
+func (o *WsPublic) WithOnReady(f func()) *WsPublic {
+	o.setOnReady(f)
+	return o
 }
 
-func (o *WsPublic) unsubscribe(topic string) {
-	o.c.Unsubscribe(topic, false)
+// Transport returns WebSocket transport options (shadows WsBase for type consistency)
+func (o *WsPublic) Transport() *uws.Options {
+	return o.WsBase.Transport()
 }
 
-func (o *WsPublic) Run() {
-	o.c.WithOnConnected(func() {
-		if o.onConnected != nil {
-			o.onConnected()
-		}
-		o.subscriptions.subscribeAll()
-	})
-	o.c.WithOnTopic(o.onTopic)
-	o.c.Run()
-}
+// Topic subscriptions
 
 func (o *WsPublic) OrderBook(symbol string) *Executor[Orderbook] {
 	return NewExecutor[Orderbook]("/contractMarket/level2Depth5:"+symbol, o.subscriptions)
-}
-
-func (o *WsPublic) onTopic(data []byte) error {
-	return o.subscriptions.processTopic(data)
 }

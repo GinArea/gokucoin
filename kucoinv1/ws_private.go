@@ -6,92 +6,63 @@ import (
 )
 
 type WsPrivate struct {
-	c              *WsClient
-	onConnected    func()
-	onDisconnected func()
-	subscriptions  *Subscriptions
+	WsBase
 }
 
 func NewWsPrivate(key, secret, password string) *WsPrivate {
 	o := new(WsPrivate)
-	o.c = NewWsClient(NewSign(key, secret, password))
-	o.subscriptions = NewSubscriptions(o)
+	o.init(NewSign(key, secret, password), true)
 	return o
 }
 
-func (o *WsPrivate) Close() {
-	o.c.Close()
-}
-
-func (o *WsPrivate) Transport() *uws.Options {
-	return o.c.Transport()
-}
+// Builder methods (return *WsPrivate for chaining)
 
 func (o *WsPrivate) WithLog(log *ulog.Log) *WsPrivate {
-	o.c.WithLog(log)
+	o.setLog(log)
 	return o
 }
 
 func (o *WsPrivate) WithProxy(proxy string) *WsPrivate {
-	o.c.WithProxy(proxy)
+	o.setProxy(proxy)
 	return o
 }
 
 func (o *WsPrivate) WithLogRequest(enable bool) *WsPrivate {
-	o.c.WithLogRequest(enable)
+	o.setLogRequest(enable)
 	return o
 }
 
 func (o *WsPrivate) WithLogResponse(enable bool) *WsPrivate {
-	o.c.WithLogResponse(enable)
+	o.setLogResponse(enable)
 	return o
 }
 
 func (o *WsPrivate) WithOnDialError(f func(error) bool) *WsPrivate {
-	o.c.WithOnDialError(f)
+	o.setOnDialError(f)
 	return o
 }
 
 func (o *WsPrivate) WithOnConnected(f func()) *WsPrivate {
-	o.onConnected = f
+	o.setOnConnected(f)
 	return o
 }
 
 func (o *WsPrivate) WithOnDisconnected(f func()) *WsPrivate {
-	o.onDisconnected = f
+	o.setOnDisconnected(f)
 	return o
 }
 
-func (o *WsPrivate) Run() {
-	o.c.WithOnConnected(func() {
-		if o.onConnected != nil {
-			o.onConnected()
-		}
-		o.subscriptions.subscribeAll()
-	})
-	o.c.WithOnTopic(o.onTopic)
-	o.c.Run()
+func (o *WsPrivate) WithOnReady(f func()) *WsPrivate {
+	o.setOnReady(f)
+	return o
 }
 
-func (o *WsPrivate) Connected() bool {
-	return o.c.Connected()
+// Transport returns WebSocket transport options (shadows WsBase for type consistency)
+func (o *WsPrivate) Transport() *uws.Options {
+	return o.WsBase.Transport()
 }
 
-func (o *WsPrivate) Ready() bool {
-	return o.Connected()
-}
-
-func (o *WsPrivate) subscribe(topic string) {
-	o.c.Subscribe(topic, true)
-}
-
-func (o *WsPrivate) unsubscribe(topic string) {
-	o.c.Unsubscribe(topic, true)
-}
-
-func (o *WsPrivate) onTopic(data []byte) error {
-	return o.subscriptions.processTopic(data)
-}
+// Topic subscriptions
 
 func (o *WsPrivate) Positions() *Executor[PositionShot] {
 	return NewExecutor[PositionShot]("/contract/positionAll", o.subscriptions)

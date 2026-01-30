@@ -11,9 +11,10 @@ import (
 )
 
 type WsClient struct {
-	c       *uws.Client
-	s       *Sign
-	onTopic func([]byte) error
+	c          *uws.Client
+	s          *Sign
+	onResponse func(WsResponse)
+	onTopic    func([]byte) error
 }
 
 func NewWsClient(s *Sign) *WsClient {
@@ -70,6 +71,11 @@ func (o *WsClient) WithOnConnected(f func()) *WsClient {
 
 func (o *WsClient) WithOnDisconnected(f func()) *WsClient {
 	o.c.WithOnDisconnected(f)
+	return o
+}
+
+func (o *WsClient) WithOnResponse(f func(WsResponse)) *WsClient {
+	o.onResponse = f
 	return o
 }
 
@@ -154,6 +160,8 @@ func (o *WsClient) onMessage(messageType int, data []byte) {
 		log.Warning("invalid message type:", uws.MessageTypeString(messageType))
 		return
 	}
+	// fmt.Printf("%s\n", data)
+
 	var r WsResponse
 	err := json.Unmarshal(data, &r)
 	if err == nil {
@@ -162,6 +170,9 @@ func (o *WsClient) onMessage(messageType int, data []byte) {
 				err = o.onTopic(data)
 			}
 		} else {
+			if o.onResponse != nil {
+				o.onResponse(r)
+			}
 			r.Log(log)
 		}
 	}

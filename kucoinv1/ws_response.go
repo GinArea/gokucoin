@@ -27,6 +27,11 @@ func (o WsResponse) IsError() bool {
 	return o.Type == "error"
 }
 
+// IsWelcome - returns true for welcome message (connection confirmed by server)
+func (o WsResponse) IsWelcome() bool {
+	return o.Type == "welcome"
+}
+
 func (o WsResponse) Log(log *ulog.Log) {
 	switch o.Type {
 	case "ping", "pong":
