@@ -159,7 +159,7 @@ type OrderFutures struct {
 	// SettleCurrency - Settlement currency (e.g., "USDT")
 	SettleCurrency string `json:"settleCurrency"`
 	// Status - Order status: "match" (partially filled), "open", "done"
-	Status OrderStatusHttp `json:"status"`
+	Status OrderStatus `json:"status"`
 	// FilledSize - Total filled size
 	FilledSize ujson.Int64 `json:"filledSize"`
 	// FilledValue - Total filled value

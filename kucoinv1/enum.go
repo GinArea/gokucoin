@@ -43,11 +43,43 @@ const (
 )
 
 // OrderStatus represents order status
-type OrderStatusHttp string
+/*
+	1. The HTTP futures details only available:
+	- open
+	- done
+
+	2. The HTTP spot details response does not include orderStatus
+
+	3. The WS futures order details only available:
+	- open
+	- match
+	- done
+
+	4. The WS spot order details only available:
+	- new
+	- open
+	- match
+	- done
+*/
+
+type OrderStatus string
 
 const (
-	OrderStatusOpen OrderStatusHttp = "open"
-	OrderStatusDone OrderStatusHttp = "done"
+	OrderStatusNew   OrderStatus = "new"
+	OrderStatusOpen  OrderStatus = "open"
+	OrderStatusDone  OrderStatus = "done"
+	OrderStatusMatch OrderStatus = "match"
+)
+
+type OrderTypeWs string
+
+const (
+	OrderTypeWsOpen     OrderTypeWs = "open"
+	OrderTypeWsMatch    OrderTypeWs = "match"
+	OrderTypeWsUpdate   OrderTypeWs = "update"
+	OrderTypeWsFilled   OrderTypeWs = "filled"
+	OrderTypeWsCanceled OrderTypeWs = "canceled"
+	OrderTypeWsReceived OrderTypeWs = "received" // only for Spot
 )
 
 // PositionSide represents position side
