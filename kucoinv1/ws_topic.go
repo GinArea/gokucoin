@@ -191,9 +191,10 @@ type WalletShotSpot struct {
 	Time ujson.Int64 `json:"time"`
 }
 
-// CandleShotSpot - Spot Candles/Klines (Spot API)
-// https://www.kucoin.com/docs-new/3470071w0
-type CandleShotSpot struct {
+// CandleShot - Candles/Klines (Spot and Futures)
+// https://www.kucoin.com/docs-new/3470071w0 (Spot)
+// https://www.kucoin.com/docs-new/3470086w0 (Futures)
+type CandleShot struct {
 	// Symbol - trading pair symbol (e.g., BTC-USDT)
 	Symbol string `json:"symbol"`
 	// Candles - OHLCV data as string array: [time, open, close, high, low, volume, turnover]
@@ -204,7 +205,7 @@ type CandleShotSpot struct {
 
 // Kline converts the string array candles data to a typed Kline struct
 // Note: WS order is [ts, open, close, high, low, volume, turnover]
-func (o *CandleShotSpot) Kline() (Kline, error) {
+func (o *CandleShot) Kline() (Kline, error) {
 	if len(o.Candles) < 7 {
 		return Kline{}, fmt.Errorf("candles: expected 7 elements, got %d", len(o.Candles))
 	}

@@ -83,9 +83,19 @@ func (o *WsPublic) orderbookTopic(symbol string) string {
 	return "/contractMarket/level2Depth5:" + symbol
 }
 
-// CandlesSpot subscribes to spot candle/kline updates
-// Topic: /market/candles:{symbol}_{interval}
+// Candles subscribes to candle/kline updates
+// Spot topic: /market/candles:{symbol}_{interval}
 // https://www.kucoin.com/docs-new/3470071w0
-func (o *WsPublic) CandlesSpot(symbol string, interval CandleInterval) *Executor[CandleShotSpot] {
-	return NewExecutor[CandleShotSpot]("/market/candles:"+symbol+"_"+string(interval), o.subscriptions)
+// Futures topic: /contractMarket/limitCandle:{symbol}_{interval}
+// https://www.kucoin.com/docs-new/3470086w0
+func (o *WsPublic) Candles(symbol string, interval CandleInterval) *Executor[CandleShot] {
+	return NewExecutor[CandleShot](o.candlesTopic(symbol, interval), o.subscriptions)
+}
+
+// candlesTopic returns the appropriate topic based on category
+func (o *WsPublic) candlesTopic(symbol string, interval CandleInterval) string {
+	if o.category == Spot {
+		return "/market/candles:" + symbol + "_" + string(interval)
+	}
+	return "/contractMarket/limitCandle:" + symbol + "_" + string(interval)
 }
