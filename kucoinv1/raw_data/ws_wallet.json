@@ -1,0 +1,27 @@
+{
+   "topic":"/contractAccount/wallet",
+   "type":"message",
+   "subject":"walletBalance.change",
+   "id":"697c7b2fa434ef0001a14b0c",
+   "userId":"647f4694f0a9430001793f5a",
+   "channelType":"private",
+   "data":{
+      "crossPosMargin":"8.251406",
+      "isolatedOrderMargin":"0",
+      "holdBalance":"0",
+      "equity":"168.3652560179",
+      "version":"12714",
+      "availableBalance":"160.1099100179",
+      "isolatedPosMargin":"0",
+      "maxWithdrawAmount":"160.1099100179",
+      "walletBalance":"168.3613160179",
+      "isolatedFundingFeeMargin":"0",
+      "crossUnPnl":"0.00394",
+      "totalCrossMargin":"168.3652560179",
+      "currency":"USDT",
+      "isolatedUnPnl":"0",
+      "availableMargin":"160.1138500179",
+      "crossOrderMargin":"0",
+      "timestamp":"1769765679160"
+   }
+}

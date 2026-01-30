@@ -1,0 +1,30 @@
+{
+   "topic":"/contractMarket/tradeOrders",
+   "type":"message",
+   "subject":"orderChange",
+   "userId":"647f4694f0a9430001793f5a",
+   "channelType":"private",
+   "data":{
+      "symbol":"XBTUSDTM",
+      "orderType":"market",
+      "side":"sell",
+      "canceledSize":"0",
+      "orderId":"406648997541965824",
+      "positionSide":"BOTH",
+      "liquidity":"taker",
+      "marginMode":"CROSS",
+      "type":"match",
+      "feeType":"takerFee",
+      "orderTime":1769765878187842837,
+      "size":"1",
+      "filledSize":"1",
+      "price":"0",
+      "matchPrice":"82583.2",
+      "matchSize":"1",
+      "remainSize":"0",
+      "tradeId":"1911165622057",
+      "tradeType":"trade",
+      "status":"match",
+      "ts":1769765878191000000
+   }
+}
