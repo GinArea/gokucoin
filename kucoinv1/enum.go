@@ -43,13 +43,11 @@ const (
 )
 
 // OrderStatus represents order status
-type OrderStatus string
+type OrderStatusHttp string
 
 const (
-	OrderStatusOpen      OrderStatus = "open"
-	OrderStatusDone      OrderStatus = "done"
-	OrderStatusMatch     OrderStatus = "match"
-	OrderStatusCancelled OrderStatus = "cancelled"
+	OrderStatusOpen OrderStatusHttp = "open"
+	OrderStatusDone OrderStatusHttp = "done"
 )
 
 // PositionSide represents position side
