@@ -2,6 +2,7 @@ package kucoinv1
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -131,7 +132,13 @@ func (o *WsClient) getUrl(string) string {
 			o.Log().Error("instance servers is empty")
 		}
 	} else {
-		o.Log().Error("error:", r.Error)
+		// Check for auth errors (codes 400001-400007)
+		if err, ok := r.Error.(*Error); ok && err.ApiKeyInvalid() {
+			o.Log().Error("credentials invalid, stopping reconnect")
+			o.c.Close()
+		} else {
+			o.Log().Error("Try to reconnect:", r.Error)
+		}
 	}
 	return ""
 }
@@ -148,7 +155,7 @@ func (o *WsClient) onMessage(messageType int, data []byte) {
 		o.c.Log().Warning("invalid message type:", uws.MessageTypeString(messageType))
 		return
 	}
-	// fmt.Printf("%s\n", data)
+	fmt.Printf("%s\n", data)
 	var r WsResponse
 	err := json.Unmarshal(data, &r)
 	if err == nil {
