@@ -2,14 +2,12 @@ package kucoinv1
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/msw-x/moon/ulog"
 	"github.com/msw-x/moon/uws"
-	"golang.org/x/exp/slices"
 )
 
 type WsClient struct {
@@ -151,21 +149,24 @@ func (o *WsClient) ping() {
 }
 
 func (o *WsClient) onMessage(messageType int, data []byte) {
+	log := o.c.Log()
 	if messageType != websocket.TextMessage {
-		o.c.Log().Warning("invalid message type:", uws.MessageTypeString(messageType))
+		log.Warning("invalid message type:", uws.MessageTypeString(messageType))
 		return
 	}
-	fmt.Printf("%s\n", data)
 	var r WsResponse
 	err := json.Unmarshal(data, &r)
 	if err == nil {
-		skipTypes := []string{"welcome", "pong"}
-		if o.onTopic != nil && !slices.Contains(skipTypes, r.Type) {
-			err = o.onTopic(data)
+		if r.IsTopic() {
+			if o.onTopic != nil {
+				err = o.onTopic(data)
+			}
+		} else {
+			r.Log(log)
 		}
 	}
 	if err != nil {
-		o.c.Log().Error(err)
+		log.Error(err)
 	}
 }
 
