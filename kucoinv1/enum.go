@@ -98,7 +98,8 @@ const (
 	PositionSideBoth  PositionSide = "BOTH"
 )
 
-// Bar represents candlestick interval
+// Bar represents candlestick interval (futures)
+// https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines
 type Bar int
 
 const (
@@ -113,6 +114,26 @@ const (
 	Bar12H Bar = 720
 	Bar1D  Bar = 1440
 	Bar1W  Bar = 10080
+)
+
+// KlineInterval - spot candlestick interval type
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines
+type KlineSpotInt string
+
+const (
+	KlineSpotInt1min   KlineSpotInt = "1min"
+	KlineSpotInt3min   KlineSpotInt = "3min"
+	KlineSpotInt5min   KlineSpotInt = "5min"
+	KlineSpotInt15min  KlineSpotInt = "15min"
+	KlineSpotInt30min  KlineSpotInt = "30min"
+	KlineSpotInt1hour  KlineSpotInt = "1hour"
+	KlineSpotInt2hour  KlineSpotInt = "2hour"
+	KlineSpotInt4hour  KlineSpotInt = "4hour"
+	KlineSpotInt6hour  KlineSpotInt = "6hour"
+	KlineSpotInt8hour  KlineSpotInt = "8hour"
+	KlineSpotInt12hour KlineSpotInt = "12hour"
+	KlineSpotInt1day   KlineSpotInt = "1day"
+	KlineSpotInt1week  KlineSpotInt = "1week"
 )
 
 // CandleInterval represents WebSocket candle subscription interval (Spot)

@@ -2,6 +2,7 @@ package kucoinv1
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/msw-x/moon/ujson"
 )
@@ -10,88 +11,88 @@ import (
 // https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols
 type Contract struct {
 	// Basic info
-	Symbol                            string
-	RootSymbol                        string
-	Type                              string
-	FirstOpenDate                     ujson.Int64
-	ExpireDate                        ujson.Int64
-	SettleDate                        ujson.Int64
-	BaseCurrency                      string
-	QuoteCurrency                     string
-	SettleCurrency                    string
-	MaxOrderQty                       ujson.Int64
-	MaxPrice                          ujson.Float64
-	LotSize                           ujson.Int64
-	TickSize                          ujson.Float64
-	IndexPriceTickSize                ujson.Float64
-	Multiplier                        ujson.Float64
-	InitialMargin                     ujson.Float64
-	MaintainMargin                    ujson.Float64
-	MaxRiskLimit                      ujson.Int64
-	MinRiskLimit                      ujson.Int64
-	RiskStep                          ujson.Int64
-	MakerFeeRate                      ujson.Float64
-	TakerFeeRate                      ujson.Float64
-	TakerFixFee                       ujson.Float64
-	MakerFixFee                       ujson.Float64
-	SettlementFee                     ujson.Float64
-	IsDeleverage                      bool
-	IsQuanto                          bool
-	IsInverse                         bool
-	MarkMethod                        string
-	FairMethod                        string
-	FundingBaseSymbol                 string
-	FundingQuoteSymbol                string
-	FundingRateSymbol                 string
-	IndexSymbol                       string
-	SettlementSymbol                  string
-	Status                            string
-	FundingFeeRate                    ujson.Float64
-	PredictedFundingFeeRate           ujson.Float64
-	FundingRateGranularity            ujson.Int64
-	OpenInterest                      string
-	TurnoverOf24h                     ujson.Float64
-	VolumeOf24h                       ujson.Float64
-	MarkPrice                         ujson.Float64
-	IndexPrice                        ujson.Float64
-	LastTradePrice                    ujson.Float64
-	NextFundingRateTime               ujson.Int64
-	MaxLeverage                       ujson.Int64
-	SourceExchanges                   []string
-	PremiumsSymbol1M                  string
-	PremiumsSymbol8H                  string
-	FundingBaseSymbol1M               string
-	FundingQuoteSymbol1M              string
-	LowPrice                          ujson.Float64
-	HighPrice                         ujson.Float64
-	PriceChgPct                       ujson.Float64
-	PriceChg                          ujson.Float64
-	DisplaySymbol                     string
-	DisplayBaseCurrency               string
-	MarketMaxOrderQty                 ujson.Int64
-	DailyInterestRate                 ujson.Float64
-	FundingRateCap                    ujson.Float64
-	FundingRateFloor                  ujson.Float64
-	Period                            ujson.Int64
+	Symbol                             string
+	RootSymbol                         string
+	Type                               string
+	FirstOpenDate                      ujson.Int64
+	ExpireDate                         ujson.Int64
+	SettleDate                         ujson.Int64
+	BaseCurrency                       string
+	QuoteCurrency                      string
+	SettleCurrency                     string
+	MaxOrderQty                        ujson.Int64
+	MaxPrice                           ujson.Float64
+	LotSize                            ujson.Int64
+	TickSize                           ujson.Float64
+	IndexPriceTickSize                 ujson.Float64
+	Multiplier                         ujson.Float64
+	InitialMargin                      ujson.Float64
+	MaintainMargin                     ujson.Float64
+	MaxRiskLimit                       ujson.Int64
+	MinRiskLimit                       ujson.Int64
+	RiskStep                           ujson.Int64
+	MakerFeeRate                       ujson.Float64
+	TakerFeeRate                       ujson.Float64
+	TakerFixFee                        ujson.Float64
+	MakerFixFee                        ujson.Float64
+	SettlementFee                      ujson.Float64
+	IsDeleverage                       bool
+	IsQuanto                           bool
+	IsInverse                          bool
+	MarkMethod                         string
+	FairMethod                         string
+	FundingBaseSymbol                  string
+	FundingQuoteSymbol                 string
+	FundingRateSymbol                  string
+	IndexSymbol                        string
+	SettlementSymbol                   string
+	Status                             string
+	FundingFeeRate                     ujson.Float64
+	PredictedFundingFeeRate            ujson.Float64
+	FundingRateGranularity             ujson.Int64
+	OpenInterest                       string
+	TurnoverOf24h                      ujson.Float64
+	VolumeOf24h                        ujson.Float64
+	MarkPrice                          ujson.Float64
+	IndexPrice                         ujson.Float64
+	LastTradePrice                     ujson.Float64
+	NextFundingRateTime                ujson.Int64
+	MaxLeverage                        ujson.Int64
+	SourceExchanges                    []string
+	PremiumsSymbol1M                   string
+	PremiumsSymbol8H                   string
+	FundingBaseSymbol1M                string
+	FundingQuoteSymbol1M               string
+	LowPrice                           ujson.Float64
+	HighPrice                          ujson.Float64
+	PriceChgPct                        ujson.Float64
+	PriceChg                           ujson.Float64
+	DisplaySymbol                      string
+	DisplayBaseCurrency                string
+	MarketMaxOrderQty                  ujson.Int64
+	DailyInterestRate                  ujson.Float64
+	FundingRateCap                     ujson.Float64
+	FundingRateFloor                   ujson.Float64
+	Period                             ujson.Int64
 	EffectiveFundingRateCycleStartTime ujson.Int64
-	CurrentFundingRateGranularity     ujson.Int64
-	NextFundingRateDateTime           ujson.Int64
-	K                                 ujson.Float64
-	M                                 ujson.Float64
-	F                                 ujson.Float64
-	MmrLimit                          ujson.Float64
-	MmrLevConstant                    ujson.Float64
-	SupportCross                      bool
-	BuyLimit                          ujson.Float64
-	SellLimit                         ujson.Float64
-	CrossRiskLimit                    ujson.Float64
-	MarketStage                       string
-	OrderPriceRange                   ujson.Float64
-	AdjustK                           ujson.Float64
-	AdjustM                           ujson.Float64
-	AdjustMmrLevConstant              ujson.Float64
-	AdjustActiveTime                  ujson.Int64
-	PreMarketToPerpDate               ujson.Int64
+	CurrentFundingRateGranularity      ujson.Int64
+	NextFundingRateDateTime            ujson.Int64
+	K                                  ujson.Float64
+	M                                  ujson.Float64
+	F                                  ujson.Float64
+	MmrLimit                           ujson.Float64
+	MmrLevConstant                     ujson.Float64
+	SupportCross                       bool
+	BuyLimit                           ujson.Float64
+	SellLimit                          ujson.Float64
+	CrossRiskLimit                     ujson.Float64
+	MarketStage                        string
+	OrderPriceRange                    ujson.Float64
+	AdjustK                            ujson.Float64
+	AdjustM                            ujson.Float64
+	AdjustMmrLevConstant               ujson.Float64
+	AdjustActiveTime                   ujson.Int64
+	PreMarketToPerpDate                ujson.Int64
 }
 
 // Ticker represents real-time ticker data
@@ -179,7 +180,7 @@ type Kline struct {
 // https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines
 type GetKlines struct {
 	Symbol      string `url:"symbol"`
-	Granularity int    `url:"granularity"`
+	Granularity Bar    `url:"granularity"`
 	From        int64  `url:"from,omitempty"`
 	To          int64  `url:"to,omitempty"`
 }
@@ -443,4 +444,87 @@ func (o GetTickerSpot) Do(c *Client) Response[TickerSpot] {
 
 func (o *Client) GetTickerSpot(symbol string) Response[TickerSpot] {
 	return GetTickerSpot{Symbol: symbol}.Do(o)
+}
+
+// GetKlinesSpot retrieves spot candlestick/kline data
+// GET /api/v1/market/candles
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines
+type GetKlinesSpot struct {
+	// Symbol - Trading pair (e.g., "BTC-USDT")
+	Symbol string `url:"symbol"`
+	// Type - Kline interval type
+	Type KlineSpotInt `url:"type"`
+	// StartAt - Start time (Unix seconds)
+	StartAt int64 `url:"startAt,omitempty"`
+	// EndAt - End time (Unix seconds)
+	EndAt int64 `url:"endAt,omitempty"`
+}
+
+func (o GetKlinesSpot) Do(c *Client) Response[[]Kline] {
+	cc := c.Copy().WithBaseUrl(SpotBaseUrl).WithPath("api/v1")
+	return GetPub(cc, "market/candles", o, transformKlinesSpot)
+}
+
+func (o *Client) GetKlinesSpot(v GetKlinesSpot) Response[[]Kline] {
+	return v.Do(o)
+}
+
+// transformKlinesSpot converts spot kline data from strings to Kline struct
+// Spot API returns: [ts, open, close, high, low, vol, quoteVol] (all strings, ts in seconds)
+// Futures API returns: [ts, open, high, low, close, vol, turnover] (all numbers, ts in ms)
+func transformKlinesSpot(data [][]string) ([]Kline, error) {
+	result := make([]Kline, len(data))
+	for i, row := range data {
+		if len(row) < 7 {
+			return nil, fmt.Errorf("kline row %d: expected 7 elements, got %d", i, len(row))
+		}
+		k := Kline{}
+		var err error
+
+		// Timestamp (string -> int64, convert seconds to milliseconds for uniformity with futures)
+		ts, err := strconv.ParseInt(row[0], 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid timestamp: %w", i, err)
+		}
+		k.Ts = ts * 1000 // convert to milliseconds
+
+		// Open
+		k.Open, err = strconv.ParseFloat(row[1], 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid open: %w", i, err)
+		}
+
+		// Close (index 2 in spot, index 4 in futures)
+		k.Close, err = strconv.ParseFloat(row[2], 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid close: %w", i, err)
+		}
+
+		// High (index 3 in spot, index 2 in futures)
+		k.High, err = strconv.ParseFloat(row[3], 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid high: %w", i, err)
+		}
+
+		// Low (index 4 in spot, index 3 in futures)
+		k.Low, err = strconv.ParseFloat(row[4], 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid low: %w", i, err)
+		}
+
+		// Volume
+		k.Volume, err = strconv.ParseFloat(row[5], 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid volume: %w", i, err)
+		}
+
+		// Turnover (quote volume)
+		k.Turnover, err = strconv.ParseFloat(row[6], 64)
+		if err != nil {
+			return nil, fmt.Errorf("kline row %d: invalid turnover: %w", i, err)
+		}
+
+		result[i] = k
+	}
+	return result, nil
 }
