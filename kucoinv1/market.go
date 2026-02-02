@@ -245,3 +245,202 @@ func transformKlines(data [][]any) ([]Kline, error) {
 	}
 	return result, nil
 }
+
+// ============================================================================
+// Spot Market Data
+// ============================================================================
+
+// SymbolSpot - spot trading pair specification
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols
+type SymbolSpot struct {
+	// Symbol - Trading pair identifier (e.g., "BTC-USDT")
+	Symbol string `json:"symbol"`
+	// Name - Display name
+	Name string `json:"name"`
+	// BaseCurrency - Base currency code
+	BaseCurrency string `json:"baseCurrency"`
+	// QuoteCurrency - Quote currency code
+	QuoteCurrency string `json:"quoteCurrency"`
+	// FeeCurrency - Currency used for fees
+	FeeCurrency string `json:"feeCurrency"`
+	// Market - Market classification
+	Market string `json:"market"`
+	// BaseMinSize - Minimum base currency amount
+	BaseMinSize ujson.Float64 `json:"baseMinSize"`
+	// QuoteMinSize - Minimum quote currency amount
+	QuoteMinSize ujson.Float64 `json:"quoteMinSize"`
+	// BaseMaxSize - Maximum base currency amount
+	BaseMaxSize ujson.Float64 `json:"baseMaxSize"`
+	// QuoteMaxSize - Maximum quote currency amount
+	QuoteMaxSize ujson.Float64 `json:"quoteMaxSize"`
+	// BaseIncrement - Base currency precision increment
+	BaseIncrement ujson.Float64 `json:"baseIncrement"`
+	// QuoteIncrement - Quote currency precision increment
+	QuoteIncrement ujson.Float64 `json:"quoteIncrement"`
+	// PriceIncrement - Price precision increment
+	PriceIncrement ujson.Float64 `json:"priceIncrement"`
+	// PriceLimitRate - Price limit rate
+	PriceLimitRate ujson.Float64 `json:"priceLimitRate"`
+	// MinFunds - Minimum order value
+	MinFunds ujson.Float64 `json:"minFunds"`
+	// IsMarginEnabled - Margin trading availability
+	IsMarginEnabled bool `json:"isMarginEnabled"`
+	// EnableTrading - Trading enabled status
+	EnableTrading bool `json:"enableTrading"`
+	// FeeCategory - Fee tier classification
+	FeeCategory int `json:"feeCategory"`
+	// MakerFeeCoefficient - Maker fee multiplier
+	MakerFeeCoefficient ujson.Float64 `json:"makerFeeCoefficient"`
+	// TakerFeeCoefficient - Taker fee multiplier
+	TakerFeeCoefficient ujson.Float64 `json:"takerFeeCoefficient"`
+	// St - Special trading flag
+	St bool `json:"st"`
+	// CallauctionIsEnabled - Call auction availability
+	CallauctionIsEnabled bool `json:"callauctionIsEnabled"`
+	// CallauctionPriceFloor - Call auction minimum price (nullable)
+	CallauctionPriceFloor *string `json:"callauctionPriceFloor"`
+	// CallauctionPriceCeiling - Call auction maximum price (nullable)
+	CallauctionPriceCeiling *string `json:"callauctionPriceCeiling"`
+	// CallauctionFirstStageStartTime - First stage auction start time (nullable)
+	CallauctionFirstStageStartTime *ujson.Int64 `json:"callauctionFirstStageStartTime"`
+	// CallauctionSecondStageStartTime - Second stage auction start time (nullable)
+	CallauctionSecondStageStartTime *ujson.Int64 `json:"callauctionSecondStageStartTime"`
+	// CallauctionThirdStageStartTime - Third stage auction start time (nullable)
+	CallauctionThirdStageStartTime *ujson.Int64 `json:"callauctionThirdStageStartTime"`
+	// TradingStartTime - Trading commencement timestamp (nullable)
+	TradingStartTime *ujson.Int64 `json:"tradingStartTime"`
+}
+
+// TickerSpot - spot Level 1 market data
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker
+type TickerSpot struct {
+	// Time - Server timestamp in milliseconds
+	Time ujson.Int64 `json:"time"`
+	// Sequence - Message sequence number
+	Sequence string `json:"sequence"`
+	// Price - Last traded price
+	Price ujson.Float64 `json:"price"`
+	// Size - Last traded size
+	Size ujson.Float64 `json:"size"`
+	// BestBid - Best bid price
+	BestBid ujson.Float64 `json:"bestBid"`
+	// BestBidSize - Best bid size
+	BestBidSize ujson.Float64 `json:"bestBidSize"`
+	// BestAsk - Best ask price
+	BestAsk ujson.Float64 `json:"bestAsk"`
+	// BestAskSize - Best ask size
+	BestAskSize ujson.Float64 `json:"bestAskSize"`
+}
+
+// TickerSpotItem - item in Get All Tickers response
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers
+type TickerSpotItem struct {
+	// Symbol - Trading pair
+	Symbol string `json:"symbol"`
+	// SymbolName - Symbol display name
+	SymbolName string `json:"symbolName"`
+	// Buy - Best bid price
+	Buy ujson.Float64 `json:"buy"`
+	// BestBidSize - Best bid size
+	BestBidSize ujson.Float64 `json:"bestBidSize"`
+	// Sell - Best ask price
+	Sell ujson.Float64 `json:"sell"`
+	// BestAskSize - Best ask size
+	BestAskSize ujson.Float64 `json:"bestAskSize"`
+	// ChangeRate - 24h change rate
+	ChangeRate ujson.Float64 `json:"changeRate"`
+	// ChangePrice - 24h change price
+	ChangePrice ujson.Float64 `json:"changePrice"`
+	// High - 24h high
+	High ujson.Float64 `json:"high"`
+	// Low - 24h low
+	Low ujson.Float64 `json:"low"`
+	// Vol - 24h volume in base currency
+	Vol ujson.Float64 `json:"vol"`
+	// VolValue - 24h volume in quote currency
+	VolValue ujson.Float64 `json:"volValue"`
+	// Last - Last trade price
+	Last ujson.Float64 `json:"last"`
+	// AveragePrice - 24h weighted average price
+	AveragePrice ujson.Float64 `json:"averagePrice"`
+	// TakerFeeRate - Taker fee rate
+	TakerFeeRate ujson.Float64 `json:"takerFeeRate"`
+	// MakerFeeRate - Maker fee rate
+	MakerFeeRate ujson.Float64 `json:"makerFeeRate"`
+	// TakerCoefficient - Taker fee coefficient
+	TakerCoefficient ujson.Float64 `json:"takerCoefficient"`
+	// MakerCoefficient - Maker fee coefficient
+	MakerCoefficient ujson.Float64 `json:"makerCoefficient"`
+}
+
+// TickersSpot - response wrapper for Get All Tickers
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers
+type TickersSpot struct {
+	// Time - Server timestamp in milliseconds
+	Time ujson.Int64 `json:"time"`
+	// Ticker - Array of tickers
+	Ticker []TickerSpotItem `json:"ticker"`
+}
+
+// GetSymbolsSpot retrieves all spot trading symbols
+// GET /api/v2/symbols
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols
+type GetSymbolsSpot struct {
+	// Market - Optional market filter (e.g., "USDS", "BTC")
+	Market string `url:"market,omitempty"`
+}
+
+func (o GetSymbolsSpot) Do(c *Client) Response[[]SymbolSpot] {
+	cc := c.Copy().WithBaseUrl(SpotBaseUrl).WithPath("api/v2")
+	return GetPub(cc, "symbols", o, forward[[]SymbolSpot])
+}
+
+func (o *Client) GetSymbolsSpot() Response[[]SymbolSpot] {
+	return GetSymbolsSpot{}.Do(o)
+}
+
+// GetSymbolSpot retrieves a single spot symbol by name
+// GET /api/v2/symbols/{symbol}
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-symbol
+type GetSymbolSpot struct {
+	Symbol string
+}
+
+func (o GetSymbolSpot) Do(c *Client) Response[SymbolSpot] {
+	cc := c.Copy().WithBaseUrl(SpotBaseUrl).WithPath("api/v2")
+	return GetPub(cc, "symbols/"+o.Symbol, struct{}{}, forward[SymbolSpot])
+}
+
+func (o *Client) GetSymbolSpot(symbol string) Response[SymbolSpot] {
+	return GetSymbolSpot{Symbol: symbol}.Do(o)
+}
+
+// GetTickersSpot retrieves all spot tickers
+// GET /api/v1/market/allTickers
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers
+type GetTickersSpot struct{}
+
+func (o GetTickersSpot) Do(c *Client) Response[TickersSpot] {
+	cc := c.Copy().WithBaseUrl(SpotBaseUrl).WithPath("api/v1")
+	return GetPub(cc, "market/allTickers", o, forward[TickersSpot])
+}
+
+func (o *Client) GetTickersSpot() Response[TickersSpot] {
+	return GetTickersSpot{}.Do(o)
+}
+
+// GetTickerSpot retrieves Level 1 ticker for a symbol
+// GET /api/v1/market/orderbook/level1?symbol=
+// https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker
+type GetTickerSpot struct {
+	Symbol string `url:"symbol"`
+}
+
+func (o GetTickerSpot) Do(c *Client) Response[TickerSpot] {
+	cc := c.Copy().WithBaseUrl(SpotBaseUrl).WithPath("api/v1")
+	return GetPub(cc, "market/orderbook/level1", o, forward[TickerSpot])
+}
+
+func (o *Client) GetTickerSpot(symbol string) Response[TickerSpot] {
+	return GetTickerSpot{Symbol: symbol}.Do(o)
+}
