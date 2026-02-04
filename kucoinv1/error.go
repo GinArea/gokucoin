@@ -41,7 +41,6 @@ func (o *Error) ApiKeyInvalid() bool {
 
 func (o *Error) TooManyVisits() bool {
 	codes := []string{
-		"100001", // The request is too frequent
 		"429000", // Too Many Requests
 	}
 	return slices.Contains(codes, o.Code)
@@ -89,7 +88,11 @@ func (o *Error) OrderFrozen() bool {
 }
 
 func (o *Error) ReduceOnlyError() bool {
-	return o.Code == "300014" // Reduce only order can not increase position
+	codes := []string{
+		"300014", // Reduce only order can not increase position
+		"300009", // No open positions to close
+	}
+	return slices.Contains(codes, o.Code)
 }
 
 func (o *Error) InvalidOrderPrice() bool {
@@ -102,6 +105,7 @@ func (o *Error) InvalidOrderQuantity() bool {
 		"300002", // Order quantity greater than the maximum limit
 		"300010", // Unsupported order quantity
 
+		"100001", // Futures invalid Size: "Please specify one of the following order units: qty (for underlying currency), size (for contracts), or valueQty (for value)."
 		"400760", // spot SELL: The order funds should more than ... USDT
 		"600101", // spot BUY: The order funds should more than ... USDT
 	}
@@ -120,6 +124,12 @@ func (o *Error) UnknownCurrency() bool {
 	return o.Code == "111001" // Currency does not exist
 }
 
-func (o *Error) OrderLinkedIdIsDuplicate() bool {
+func (o *Error) OrderIdIsDuplicate() bool {
 	return o.Code == "102426" // Duplicate user-defined unique order ID
+}
+
+func (o *Error) ClientOIdIsDuplicate() bool {
+	// Classic account mode
+	// Spot + Futures allows duplicating ClientOId
+	return false
 }
