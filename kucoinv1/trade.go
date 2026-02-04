@@ -24,7 +24,7 @@ type OrderId struct {
 type PlaceOrderFutures struct {
 	// ClientOid - Unique order id created by users to identify their orders.
 	// Only numbers, characters, underline(_) and separator(-) are allowed.
-	ClientOid string `json:"clientOid"`
+	ClientOid string `json:"clientOid,omitempty"`
 	// Side - Order side: "buy" or "sell"
 	Side Side `json:"side"`
 	// Symbol - Symbol of the contract (e.g., XBTUSDTM)
@@ -74,7 +74,7 @@ type PlaceOrderFutures struct {
 	VisibleSize string `json:"visibleSize,omitempty"`
 	// PositionSide - Position direction: "BOTH", "LONG", or "SHORT".
 	// Use "BOTH" for one-way mode, "LONG"/"SHORT" for hedge mode. BOTH - default
-	PositionSide PositionSide `json:"positionSide,omitempty"`
+	PositionSide *PositionSide `json:"positionSide,omitempty"`
 }
 
 func (o PlaceOrderFutures) Do(c *Client) Response[OrderId] {

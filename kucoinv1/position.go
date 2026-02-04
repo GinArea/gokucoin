@@ -53,7 +53,7 @@ type Position struct {
 	IsInverse         bool
 	MaintainMargin    ujson.Float64
 	MarginMode        string
-	PositionSide      string
+	PositionSide      PositionSide
 	Leverage          ujson.Float64
 	DealComm          ujson.Float64
 	FundingFee        ujson.Float64
