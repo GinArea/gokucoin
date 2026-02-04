@@ -112,3 +112,7 @@ func (o *Error) InvalidLeverage() bool {
 func (o *Error) SignatureError() bool {
 	return o.Code == "100005" // Signature error
 }
+
+func (o *Error) UnknownCurrency() bool {
+	return o.Code == "111001" // Currency does not exist
+}
