@@ -133,3 +133,10 @@ func (o *Error) ClientOIdIsDuplicate() bool {
 	// Spot + Futures allows duplicating ClientOId
 	return false
 }
+
+func (o *Error) IncorrectTradingMode() bool {
+	codes := []string{
+		"330013", // Your order is in Hedge Mode, while your account is set to One-Way Mode. Update your settings so they match and try again
+	}
+	return slices.Contains(codes, o.Code)
+}
