@@ -116,3 +116,7 @@ func (o *Error) SignatureError() bool {
 func (o *Error) UnknownCurrency() bool {
 	return o.Code == "111001" // Currency does not exist
 }
+
+func (o *Error) OrderLinkedIdIsDuplicate() bool {
+	return o.Code == "102426" // Duplicate user-defined unique order ID
+}

@@ -219,15 +219,15 @@ type PlaceOrderSpot struct {
 	PostOnly *bool `json:"postOnly,omitempty"`
 	// Hidden - Hidden order flag. Order will not appear in order book
 	Hidden *bool `json:"hidden,omitempty"`
-	// Funds - Order amount in quote currency. For market buy orders only
+	// Iceberg - Iceberg order flag. Only a portion of the order is displayed
 	Iceberg *bool `json:"iceberg,omitempty"`
 	// VisibleSize - The maximum visible size of an iceberg order
 	VisibleSize string `json:"visibleSize,omitempty"`
 
 	// Size - Order size in base currency (e.g., "0.001" for BTC)
-	Size  string `json:"size,omitempty"`
+	Size string `json:"size,omitempty"`
+	// Funds - Order amount in quote currency. For market buy orders only
 	Funds string `json:"funds,omitempty"`
-	// Iceberg - Iceberg order flag. Only a portion of the order is displayed
 }
 
 func (o PlaceOrderSpot) Do(c *Client) Response[OrderId] {
