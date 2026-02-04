@@ -101,6 +101,9 @@ func (o *Error) InvalidOrderQuantity() bool {
 		"300001", // Order quantity less than the minimum requirement
 		"300002", // Order quantity greater than the maximum limit
 		"300010", // Unsupported order quantity
+
+		"400760", // spot SELL: The order funds should more than ... USDT
+		"600101", // spot BUY: The order funds should more than ... USDT
 	}
 	return slices.Contains(codes, o.Code)
 }
