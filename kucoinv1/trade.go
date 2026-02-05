@@ -327,11 +327,11 @@ type GetOrderSpot struct {
 	Symbol string `url:"symbol"`
 }
 
-func (o GetOrderSpot) Do(c *Client) Response[OrderSpot] {
+func (o GetOrderSpot) Do(c *Client) Response[*OrderSpot] {
 	cc := c.Copy().WithBaseUrl(SpotBaseUrl).WithPath("api/v1")
-	return Get(cc, "hf/orders/client-order/"+o.ClientOid, o, forward[OrderSpot])
+	return Get(cc, "hf/orders/client-order/"+o.ClientOid, o, forward[*OrderSpot])
 }
 
-func (o *Client) GetOrderSpot(clientOid, symbol string) Response[OrderSpot] {
+func (o *Client) GetOrderSpot(clientOid, symbol string) Response[*OrderSpot] {
 	return GetOrderSpot{ClientOid: clientOid, Symbol: symbol}.Do(o)
 }
