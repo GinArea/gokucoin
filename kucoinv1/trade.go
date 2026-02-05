@@ -179,11 +179,11 @@ type GetOrderFutures struct {
 	ClientOid string `url:"clientOid"`
 }
 
-func (o GetOrderFutures) Do(c *Client) Response[*OrderFutures] {
-	return Get(c, "orders/byClientOid", o, forward[*OrderFutures])
+func (o GetOrderFutures) Do(c *Client) Response[OrderFutures] {
+	return Get(c, "orders/byClientOid", o, forward[OrderFutures])
 }
 
-func (o *Client) GetOrderFutures(clientOid string) Response[*OrderFutures] {
+func (o *Client) GetOrderFutures(clientOid string) Response[OrderFutures] {
 	return GetOrderFutures{ClientOid: clientOid}.Do(o)
 }
 
