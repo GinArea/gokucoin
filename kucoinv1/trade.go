@@ -97,9 +97,9 @@ type OrderFutures struct {
 	// Symbol - Symbol of the contract
 	Symbol string `json:"symbol"`
 	// Type - Order type: "limit" or "market"
-	Type string `json:"type"`
+	Type OrderType `json:"type"`
 	// Side - Order side: "buy" or "sell"
-	Side string `json:"side"`
+	Side Side `json:"side"`
 	// Price - Order price
 	Price ujson.Float64 `json:"price"`
 	// Size - Order size in contracts
@@ -179,11 +179,11 @@ type GetOrderFutures struct {
 	ClientOid string `url:"clientOid"`
 }
 
-func (o GetOrderFutures) Do(c *Client) Response[OrderFutures] {
-	return Get(c, "orders/byClientOid", o, forward[OrderFutures])
+func (o GetOrderFutures) Do(c *Client) Response[*OrderFutures] {
+	return Get(c, "orders/byClientOid", o, forward[*OrderFutures])
 }
 
-func (o *Client) GetOrderFutures(clientOid string) Response[OrderFutures] {
+func (o *Client) GetOrderFutures(clientOid string) Response[*OrderFutures] {
 	return GetOrderFutures{ClientOid: clientOid}.Do(o)
 }
 
@@ -253,9 +253,9 @@ type OrderSpot struct {
 	// OpType - Operation type: "DEAL" (matched) or "CANCEL" (cancelled)
 	OpType string `json:"opType"`
 	// Type - Order type: "limit" or "market"
-	Type string `json:"type"`
+	Type OrderType `json:"type"`
 	// Side - Order side: "buy" or "sell"
-	Side string `json:"side"`
+	Side Side `json:"side"`
 	// Price - Order price
 	Price ujson.Float64 `json:"price"`
 	// Size - Order size in base currency
