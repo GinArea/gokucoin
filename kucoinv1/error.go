@@ -2,6 +2,7 @@ package kucoinv1
 
 import (
 	"fmt"
+	"strings"
 
 	"golang.org/x/exp/slices"
 )
@@ -89,6 +90,7 @@ func (o *Error) ReduceOnlyError() bool {
 func (o *Error) InvalidOrderQuantity() bool {
 	codes := []string{
 		"400760", // spot SELL: The order funds should more than ... USDT
+		"600100", // spot: Order size increment invalid
 		"600101", // spot BUY: The order funds should more than ... USDT
 	}
 	return slices.Contains(codes, o.Code)
@@ -119,4 +121,9 @@ func (o *Error) AccessDenied() bool {
 		"411100", // User is frozen -- Please contact us via support center
 	}
 	return slices.Contains(codes, o.Code)
+}
+
+func (o *Error) OrderDoesNotExist() bool {
+	// 100001 - common error, need text analyze
+	return strings.Contains(o.Text, "orderNotExist") && o.Code == "100001"
 }
