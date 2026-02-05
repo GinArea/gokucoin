@@ -88,7 +88,6 @@ func (o *Error) ReduceOnlyError() bool {
 
 func (o *Error) InvalidOrderQuantity() bool {
 	codes := []string{
-		"100001", // Futures invalid Size: "Please specify one of the following order units: qty (for underlying currency), size (for contracts), or valueQty (for value)."
 		"400760", // spot SELL: The order funds should more than ... USDT
 		"600101", // spot BUY: The order funds should more than ... USDT
 	}
