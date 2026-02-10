@@ -65,9 +65,9 @@ func req[R, T any](c *Client, method string, path string, request any, transform
 	h := perf.Do()
 	if h.Error == nil {
 		r.StatusCode = h.StatusCode
-		if h.BodyExists() {
-			fmt.Println(string(h.Body))
-		}
+		// if h.BodyExists() {
+		// 	fmt.Println(string(h.Body))
+		// }
 		if h.BodyExists() &&
 			r.StatusCode != http.StatusInternalServerError &&
 			r.StatusCode != http.StatusBadGateway &&
