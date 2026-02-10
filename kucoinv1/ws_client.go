@@ -100,6 +100,10 @@ func (o *WsClient) Connected() bool {
 	return o.c.Connected()
 }
 
+func (o *WsClient) Reconnect() {
+	o.c.Reconnect()
+}
+
 func (o *WsClient) Send(r WsRequest) {
 	o.c.SendJson(r)
 }

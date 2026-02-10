@@ -35,6 +35,10 @@ func (o *WsBase) Connected() bool {
 	return o.c.Connected()
 }
 
+func (o *WsBase) Reconnect() {
+	o.c.Reconnect()
+}
+
 func (o *WsBase) Ready() bool {
 	return o.ready
 }
