@@ -126,7 +126,7 @@ type OrderShotSpot struct {
 	// Type - event type: "received", "open", "update", "match", "filled", "canceled"
 	Type OrderTypeWs `json:"type"`
 	// Status - order status: "new", "open", "match", "done"
-	Status string `json:"status"`
+	Status OrderStatus `json:"status"`
 	// Price - order price (for limit orders)
 	Price ujson.Float64 `json:"price"`
 	// OriginSize - original order size
