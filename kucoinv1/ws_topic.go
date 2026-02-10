@@ -124,7 +124,7 @@ type OrderShotSpot struct {
 	// OrderType - order type: "limit" or "market"
 	OrderType OrderType `json:"orderType"`
 	// Type - event type: "received", "open", "update", "match", "filled", "canceled"
-	Type string `json:"type"`
+	Type OrderTypeWs `json:"type"`
 	// Status - order status: "new", "open", "match", "done"
 	Status string `json:"status"`
 	// Price - order price (for limit orders)
