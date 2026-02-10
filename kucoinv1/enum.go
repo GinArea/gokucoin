@@ -99,6 +99,7 @@ const (
 )
 
 // Bar represents candlestick interval (futures)
+// HTTP requrest - `granularity` field
 // https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines
 type Bar int
 
@@ -117,6 +118,7 @@ const (
 )
 
 // KlineInterval - spot candlestick interval type
+// HTTP request - `type` field
 // https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines
 type KlineSpotInt string
 
@@ -138,6 +140,8 @@ const (
 
 // CandleInterval represents WebSocket candle subscription interval (Spot)
 // https://www.kucoin.com/docs-new/3470071w0
+
+// https://www.kucoin.com/docs-new/3470086w0 (Futures) +5min + 1month -6hour
 type CandleInterval string
 
 const (
@@ -148,7 +152,6 @@ const (
 	CandleInterval1H  CandleInterval = "1hour"
 	CandleInterval2H  CandleInterval = "2hour"
 	CandleInterval4H  CandleInterval = "4hour"
-	CandleInterval6H  CandleInterval = "6hour"
 	CandleInterval8H  CandleInterval = "8hour"
 	CandleInterval12H CandleInterval = "12hour"
 	CandleInterval1D  CandleInterval = "1day"
