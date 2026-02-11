@@ -55,6 +55,7 @@ func (o *Error) InsufficientBalance() bool {
 		"200004", // spot: Balance insufficient!
 		"200005", // Insufficient balance (insufficient balance when modifying risk limit)
 		"300003", // Balance not enough, please first deposit at least 2 USDT before you go to battle
+		"330008", // Order quantity is too high, insufficient available margin.
 		"400100", // account.available.amount -- Insufficient balance
 	}
 	return slices.Contains(codes, o.Code)
