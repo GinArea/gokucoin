@@ -14,6 +14,7 @@ type WsClient struct {
 	c          *uws.Client
 	s          *Sign
 	category   Category // Spot or Futures (determines token endpoint base URL)
+	proxy      string   // proxy for HTTP requests (WS token retrieval)
 	onResponse func(WsResponse)
 	onTopic    func([]byte) error
 }
@@ -45,6 +46,7 @@ func (o *WsClient) WithLog(log *ulog.Log) *WsClient {
 
 func (o *WsClient) WithProxy(proxy string) *WsClient {
 	o.c.WithProxy(proxy)
+	o.proxy = proxy
 	return o
 }
 
@@ -130,6 +132,9 @@ func (o *WsClient) Unsubscribe(s string, isPrivateChannel bool) {
 
 func (o *WsClient) getUrl(string) string {
 	client := NewClient()
+	if o.proxy != "" {
+		client.WithProxy(o.proxy)
+	}
 	// Use Spot base URL for Spot category token endpoint
 	if o.category == Spot {
 		client.WithBaseUrl(SpotBaseUrl)
