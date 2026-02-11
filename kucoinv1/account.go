@@ -46,6 +46,16 @@ func (o *Client) GetAccountSummary() Response[AccountSummary] {
 // ApiKeyInfo - response for GET /api/v1/user/api-key (Spot API v1)
 // https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-apikey-info
 type ApiKeyInfo struct {
+	// Uid - User ID associated with the API key
+	Uid int64 `json:"uid"`
+	// Master account UID. Returns empty when called by the master account itself.
+	ParentUid int64 `json:"parentUid"`
+	// Region - Geographic region designation for the API key
+	Region string `json:"region"`
+	// KycStatus - KYC (Know Your Customer) verification status level
+	KycStatus int `json:"kycStatus"`
+	// Sub-account name (not present for the master account)
+	SubName string `json:"subName"`
 	// Remark - User-defined label or note for the API key
 	Remark string `json:"remark"`
 	// ApiKey - The unique identifier for the API key
@@ -56,16 +66,14 @@ type ApiKeyInfo struct {
 	Permission string `json:"permission"`
 	// IpWhitelist - IP addresses authorized to use this API key
 	IpWhitelist string `json:"ipWhitelist"`
-	// CreatedAt - Timestamp indicating when the API key was created
-	CreatedAt int64 `json:"createdAt"`
-	// Uid - User ID associated with the API key
-	Uid int64 `json:"uid"`
 	// IsMaster - Boolean indicating if this is a master account API key
 	IsMaster bool `json:"isMaster"`
-	// Region - Geographic region designation for the API key
-	Region string `json:"region"`
-	// KycStatus - KYC (Know Your Customer) verification status level
-	KycStatus int `json:"kycStatus"`
+	// CreatedAt - Timestamp indicating when the API key was created
+	CreatedAt int64 `json:"createdAt"`
+	// API key expiration timestamp (Unix milliseconds). Returns null if no expiration is set.
+	ExpiredAt int64 `json:"expiredAt"`
+	// Third-party application name. Returns empty string if not associated with any third-party app.
+	ThirdPartyApp string `json:"thirdPartyApp"`
 	// SiteType - Site type identifier
 	SiteType string `json:"siteType"`
 }
@@ -347,10 +355,11 @@ type BrokerUser struct {
 // GET /api/v2/broker/queryUser
 // https://www.kucoin.com/docs-new/rest/broker/api-broker/get-user-list
 type GetBrokerUsers struct {
-	// TradeType - Filter by trading type (e.g., "all")
-	TradeType string `url:"tradeType,omitempty"`
 	// Uid - Filter by user ID
 	Uid string `url:"uid,omitempty"`
+	// TradeType - Filter by trading type (e.g., "all")
+	TradeType string `url:"tradeType,omitempty"`
+
 	// Rcode - Filter by referral code
 	Rcode string `url:"rcode,omitempty"`
 	// Tag - Filter by tag
