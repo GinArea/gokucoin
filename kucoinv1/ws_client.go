@@ -150,9 +150,14 @@ func (o *WsClient) getUrl(string) string {
 			o.Log().Error("instance servers is empty")
 		}
 	} else {
-		// Check for auth errors (codes 400001-400007)
 		if err, ok := r.Error.(*Error); ok && err.ApiKeyInvalid() {
 			o.Log().Error("credentials invalid, stopping reconnect")
+			o.c.Close()
+		} else if err, ok := r.Error.(*Error); ok && err.UnmatchedIp() {
+			o.Log().Error("IP not in whitelist, stopping reconnect")
+			o.c.Close()
+		} else if err, ok := r.Error.(*Error); ok && err.AccessDenied() {
+			o.Log().Error("Access denied, stopping reconnect")
 			o.c.Close()
 		} else {
 			o.Log().Error("Try to reconnect:", r.Error)
