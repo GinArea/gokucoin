@@ -70,3 +70,39 @@ func (o *Client) GetPositions(currency string) Response[[]Position] {
 		Currency: currency,
 	}.Do(o)
 }
+
+// Switch Position Mode
+// https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-position-mode
+type SwitchPositionMode struct {
+	// the endpoint expects a string, ujson.Int64 always marshals as a quoted value
+	PositionMode ujson.Int64
+}
+
+func (o SwitchPositionMode) Do(c *Client) Response[bool] {
+	// futures position mode lives on api/v2 while the rest of the futures api is v1
+	return Post(c.Copy().WithPath(ApiVersion2), "position/switchPositionMode", o, func(struct{}) (bool, error) {
+		return true, nil
+	})
+}
+
+func (o *Client) SwitchPositionMode(mode PositionMode) Response[bool] {
+	return SwitchPositionMode{PositionMode: ujson.Int64(mode)}.Do(o)
+}
+
+// Get Position Mode
+// https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-mode
+type GetPositionMode struct{}
+
+func (o GetPositionMode) Do(c *Client) Response[PositionMode] {
+	type result struct {
+		// unlike switchPositionMode this endpoint answers with a number
+		PositionMode ujson.Int64
+	}
+	return Get(c.Copy().WithPath(ApiVersion2), "position/getPositionMode", o, func(r result) (PositionMode, error) {
+		return PositionMode(r.PositionMode.Value()), nil
+	})
+}
+
+func (o *Client) GetPositionMode() Response[PositionMode] {
+	return GetPositionMode{}.Do(o)
+}

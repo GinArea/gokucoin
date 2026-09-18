@@ -4,6 +4,7 @@ const (
 	// Futures REST API
 	MainBaseUrl = "https://api-futures.kucoin.com"
 	ApiVersion  = "api/v1"
+	ApiVersion2 = "api/v2" // futures position mode only
 
 	// Spot REST API
 	SpotBaseUrl = "https://api.kucoin.com"

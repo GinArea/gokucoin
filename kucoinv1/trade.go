@@ -335,3 +335,22 @@ func (o GetOrderSpot) Do(c *Client) Response[*OrderSpot] {
 func (o *Client) GetOrderSpot(clientOid, symbol string) Response[*OrderSpot] {
 	return GetOrderSpot{ClientOid: clientOid, Symbol: symbol}.Do(o)
 }
+
+// Cancel Order By OrderId
+// https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld
+type CancelOrderFutures struct {
+	OrderId string
+}
+
+func (o CancelOrderFutures) Do(c *Client) Response[[]string] {
+	type result struct {
+		CancelledOrderIds []string
+	}
+	return Delete(c, "orders/"+o.OrderId, struct{}{}, func(r result) ([]string, error) {
+		return r.CancelledOrderIds, nil
+	})
+}
+
+func (o *Client) CancelOrderFutures(orderId string) Response[[]string] {
+	return CancelOrderFutures{OrderId: orderId}.Do(o)
+}

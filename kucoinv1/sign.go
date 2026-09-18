@@ -38,16 +38,21 @@ func (o *Sign) HeaderPost(h http.Header, body []byte, path string, apiPath strin
 	o.header(h, string(body), path, "POST", apiPath)
 }
 
+func (o *Sign) HeaderDelete(h http.Header, v url.Values, path string, apiPath string) {
+	o.header(h, v.Encode(), path, "DELETE", apiPath)
+}
+
 func (o *Sign) header(h http.Header, data string, path string, method string, apiPath string) {
 	ts := o.timestamp()
 
 	// Pre-sign: timestamp + method + /api/vX/path + body
 	preSign := ts + method + "/" + apiPath + "/" + path
 	if data != "" {
-		if method == "GET" {
-			preSign += "?" + data
-		} else {
+		// body goes as is, query string is separated by the question mark
+		if method == "POST" {
 			preSign += data
+		} else {
+			preSign += "?" + data
 		}
 	}
 

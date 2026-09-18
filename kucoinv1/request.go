@@ -25,6 +25,10 @@ func PostPub[R, T any](c *Client, path string, req any, transform func(R) (T, er
 	return request(c, http.MethodPost, path, req, transform, false)
 }
 
+func Delete[R, T any](c *Client, path string, req any, transform func(R) (T, error)) Response[T] {
+	return request(c, http.MethodDelete, path, req, transform, true)
+}
+
 func request[R, T any](c *Client, method string, path string, request any, transform func(R) (T, error), sign bool) (r Response[T]) {
 	var attempt int
 	for {
@@ -47,6 +51,8 @@ func req[R, T any](c *Client, method string, path string, request any, transform
 		perf = c.c.Get(path).Params(request)
 	case http.MethodPost:
 		perf = c.c.Post(path).Json(request)
+	case http.MethodDelete:
+		perf = c.c.Delete(path).Params(request)
 	default:
 		r.Error = fmt.Errorf("forbidden method: %s", method)
 		return
@@ -60,6 +66,8 @@ func req[R, T any](c *Client, method string, path string, request any, transform
 			c.s.HeaderGet(perf.Request.Header, perf.Request.Params, path, c.apiPath)
 		case http.MethodPost:
 			c.s.HeaderPost(perf.Request.Header, perf.Request.Body, path, c.apiPath)
+		case http.MethodDelete:
+			c.s.HeaderDelete(perf.Request.Header, perf.Request.Params, path, c.apiPath)
 		}
 	}
 	h := perf.Do()

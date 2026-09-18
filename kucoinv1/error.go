@@ -115,6 +115,17 @@ func (o *Error) IncorrectTradingMode() bool {
 	return slices.Contains(codes, o.Code)
 }
 
+// PositionModeSwitchBlocked - the mode cannot be changed while the account trades
+func (o *Error) PositionModeSwitchBlocked() bool {
+	return o.Code == "500100" // You currently have open positions or orders. Please close or cancel them before changing position modes
+}
+
+// PositionModeNotSet - the account has never set the position mode explicitly
+// https://www.kucoin.com/docs-new/error-code/futures
+func (o *Error) PositionModeNotSet() bool {
+	return o.Code == "330011" // Before initiating any Futures trades, please use the Switch Position Mode endpoint to update your position mode
+}
+
 func (o *Error) AccessDenied() bool {
 	codes := []string{
 		"400007", // Access Denied

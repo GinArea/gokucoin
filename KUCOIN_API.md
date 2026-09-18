@@ -13,7 +13,7 @@ This document covers the **Classic REST API** (production-ready). KuCoin also ha
 ### API Versions
 
 - Spot: `/api/v1/`, `/api/v2/`, `/api/v3/` (varies by endpoint)
-- Futures: `/api/v1/`
+- Futures: `/api/v1/`, `/api/v2/` (position mode only)
 
 ---
 
@@ -590,6 +590,23 @@ POST /api/v1/position/margin/deposit-margin
 Body: symbol, margin, bizNo
 ```
 
+#### Get Position Mode
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-mode
+```
+GET /api/v2/position/getPositionMode
+Data: positionMode (number: 0 one-way, 1 hedge)
+```
+
+#### Switch Position Mode
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-position-mode
+```
+POST /api/v2/position/switchPositionMode
+Body: positionMode (string: "0" one-way, "1" hedge)
+```
+Account-wide for all futures contracts. Requires no open positions and no active orders,
+otherwise 500100 (the same code for an open order and for an open position).
+Repeating the current mode answers 200000, there is no "not modified" code.
+
 ### Risk Limit
 
 #### Get Risk Limit
@@ -816,6 +833,14 @@ Intervals: 1min, 5min, 15min, 30min, 1hour, 2hour, 4hour, 6hour, 8hour, 12hour, 
 | 400500 | Order quantity invalid |
 | 400600 | Symbol not traded |
 | 400700 | Price out of range |
+| 100004 | The order cannot be canceled |
+| 300000 | Request parameter illegal (e.g. unknown positionMode) |
+| 330005 | The order margin mode does not match the one selected for the symbol |
+| 330008 | Order quantity is too high, insufficient available margin |
+| 330011 | Position mode must be set explicitly before trading |
+| 330012 | Order is in one-way mode while the account is in hedge mode |
+| 330013 | Order is in hedge mode while the account is in one-way mode |
+| 500100 | Open positions or orders block the position mode change |
 
 ---
 

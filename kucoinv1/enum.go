@@ -98,6 +98,15 @@ const (
 	PositionSideBoth  PositionSide = "BOTH"
 )
 
+// PositionMode of switchPositionMode endpoint
+// https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-position-mode
+type PositionMode int64
+
+const (
+	PositionModeOneWay PositionMode = 0
+	PositionModeHedge  PositionMode = 1
+)
+
 // Bar represents candlestick interval (futures)
 // HTTP requrest - `granularity` field
 // https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines
