@@ -106,3 +106,50 @@ func (o GetPositionMode) Do(c *Client) Response[PositionMode] {
 func (o *Client) GetPositionMode() Response[PositionMode] {
 	return GetPositionMode{}.Do(o)
 }
+
+// CrossUserLeverage - response for GET /api/v2/getCrossUserLeverage
+// https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage
+type CrossUserLeverage struct {
+	// Symbol - futures contract symbol
+	Symbol string
+	// Leverage - cross margin leverage of the account for the symbol (quoted number: "3")
+	Leverage ujson.Int64
+}
+
+// Get Cross Margin Leverage
+// https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage
+type GetCrossUserLeverage struct {
+	Symbol string `url:",omitempty"`
+}
+
+func (o GetCrossUserLeverage) Do(c *Client) Response[CrossUserLeverage] {
+	// cross margin leverage lives on api/v2 while the rest of the futures api is v1
+	return Get(c.Copy().WithPath(ApiVersion2), "getCrossUserLeverage", o, forward[CrossUserLeverage])
+}
+
+func (o *Client) GetCrossUserLeverage(symbol string) Response[CrossUserLeverage] {
+	return GetCrossUserLeverage{
+		Symbol: symbol,
+	}.Do(o)
+}
+
+// Change Cross Margin Leverage
+// https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage
+type ChangeCrossUserLeverage struct {
+	// Symbol - futures contract symbol
+	Symbol string
+	// the endpoint expects a string, ujson.Int64 always marshals as a quoted value
+	Leverage ujson.Int64
+}
+
+func (o ChangeCrossUserLeverage) Do(c *Client) Response[bool] {
+	// changeCrossUserLeverage lives on api/v2 and answers with data: true
+	return Post(c.Copy().WithPath(ApiVersion2), "changeCrossUserLeverage", o, forward[bool])
+}
+
+func (o *Client) ChangeCrossUserLeverage(symbol string, leverage int) Response[bool] {
+	return ChangeCrossUserLeverage{
+		Symbol:   symbol,
+		Leverage: ujson.Int64(leverage),
+	}.Do(o)
+}

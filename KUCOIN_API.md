@@ -607,6 +607,27 @@ Account-wide for all futures contracts. Requires no open positions and no active
 otherwise 500100 (the same code for an open order and for an open position).
 Repeating the current mode answers 200000, there is no "not modified" code.
 
+#### Get Cross Margin Leverage
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage
+```
+GET /api/v2/getCrossUserLeverage
+Query: symbol
+Data: {symbol, leverage (string: "3")}
+```
+Per-symbol account-level setting of the cross margin mode. Permission: General
+(a read-only key is enough), weight 2.
+
+#### Modify Cross Margin Leverage
+Docs: https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage
+```
+POST /api/v2/changeCrossUserLeverage
+Body: symbol, leverage (string: "10")
+Data: true
+```
+Permission: Futures, weight 2. In cross margin the leverage/marginMode fields of an order
+are ignored by the exchange, the account-level cross leverage of the symbol is used instead.
+Lowering the leverage with open positions/orders increases the required margin.
+
 ### Risk Limit
 
 #### Get Risk Limit
